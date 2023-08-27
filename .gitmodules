@@ -1,0 +1,3 @@
+[submodule "vendor/libfmsynth"]
+	path = vendor/libfmsynth
+	url = https://github.com/Themaister/libfmsynth

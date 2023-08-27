@@ -11,6 +11,7 @@
 #endif
 #include "libretro.h"
 #include "miniphysfs.h"
+#include "fmsynth.h"
 
 constexpr auto screenWidth = 256;
 constexpr auto screenHeight = 384;
