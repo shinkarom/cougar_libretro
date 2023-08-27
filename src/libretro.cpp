@@ -12,6 +12,7 @@
 #include "libretro.h"
 #include "miniphysfs.h"
 #include "fmsynth.h"
+#include "duktape/duktape.h"
 
 constexpr auto screenWidth = 256;
 constexpr auto screenHeight = 384;

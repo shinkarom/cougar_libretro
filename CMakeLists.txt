@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.9)
 set(LIBNAME cougar_libretro)
 project(${LIBNAME} LANGUAGES C CXX VERSION 1.0.1 DESCRIPTION "Cougar fantasy console libretro core")
 
-add_library(libfmsynth SHARED
+add_library(libfmsynth STATIC
 	vendor/libfmsynth/src/fmsynth.c)
 target_include_directories(libfmsynth PUBLIC
 	vendor/libfmsynth/include)
@@ -12,6 +12,7 @@ set(CMAKE_SHARED_LIBRARY_PREFIX )
 add_library(${LIBNAME} SHARED 
     src/libretro.cpp
 	src/miniphysfs.cpp
+	src/duktape/duktape.c
     )
 set_target_properties(${LIBNAME} PROPERTIES
     SOVERSION 1
