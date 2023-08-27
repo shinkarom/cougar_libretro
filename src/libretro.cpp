@@ -10,6 +10,7 @@
 #include <windows.h>
 #endif
 #include "libretro.h"
+#include "miniphysfs.h"
 
 constexpr auto screenWidth = 256;
 constexpr auto screenHeight = 384;

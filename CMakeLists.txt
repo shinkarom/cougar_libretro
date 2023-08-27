@@ -5,6 +5,7 @@ set(CMAKE_SHARED_LIBRARY_PREFIX )
 
 add_library(${LIBNAME} SHARED 
     src/libretro.cpp
+	src/miniphysfs.cpp
     )
 set_target_properties(${LIBNAME} PROPERTIES
     SOVERSION 1
