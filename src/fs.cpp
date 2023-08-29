@@ -1,6 +1,7 @@
 #include "fs.h"
 #include "miniphysfs.h"
 
+
 namespace fs {
 	
 	PHYSFS_File* handles[32];
@@ -111,7 +112,7 @@ namespace fs {
 		}
 		
 		if (doMAlloc) {
-			buffer = new char[size+1];
+			buffer = new char[size+1]();
 		}
 		
 		seek(handle, 0);

@@ -7,6 +7,19 @@ add_library(libfmsynth STATIC
 target_include_directories(libfmsynth PUBLIC
 	vendor/libfmsynth/include)
 
+add_library(ymfm STATIC
+	vendor/ymfm/src/ymfm_adpcm.cpp
+	vendor/ymfm/src/ymfm_misc.cpp
+	vendor/ymfm/src/ymfm_opl.cpp
+	vendor/ymfm/src/ymfm_opm.cpp
+	vendor/ymfm/src/ymfm_opn.cpp
+	vendor/ymfm/src/ymfm_opq.cpp
+	vendor/ymfm/src/ymfm_pcm.cpp
+	vendor/ymfm/src/ymfm_ssg.cpp
+	)
+target_include_directories(ymfm PUBLIC
+	vendor/ymfm/src)
+
 set(CMAKE_SHARED_LIBRARY_PREFIX )
 
 add_library(${LIBNAME} SHARED 
@@ -21,5 +34,5 @@ set_target_properties(${LIBNAME} PROPERTIES
     LINKER_LANGUAGE CXX
 	RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 target_link_libraries(${LIBNAME} 
-	libfmsynth)
+	libfmsynth ymfm)
 target_include_directories(${LIBNAME} PUBLIC src)

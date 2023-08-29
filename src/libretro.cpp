@@ -1,9 +1,10 @@
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
-#include <math.h>
+#include <cstdio>
+#include <cstdint>
+#include <cstdlib>
+#include <cstdarg>
+#include <cstring>
+#include <cmath>
+#include <cstring>
 
 #include <stdio.h>
 #if defined(_WIN32) && !defined(_XBOX)
@@ -12,11 +13,12 @@
 #include "libretro.h"
 #include "fmsynth.h"
 #include "duktape/duktape.h"
+#include "ymfm.h"
 
 #include "fs.h"
 
-constexpr auto screenWidth = 256;
-constexpr auto screenHeight = 384;
+constexpr auto screenWidth = 320;
+constexpr auto screenHeight = 320;
 constexpr auto screenTotalPixels = screenWidth * screenHeight;
 constexpr auto audioSampleRate = 44100;
 
@@ -192,12 +194,14 @@ static void keyboard_cb(bool down, unsigned keycode,
 void retro_run(void)
 {
    update_input();
-
+	
 	video_cb(frame_buf, screenWidth, screenHeight, screenWidth*sizeof(uint32_t));
 
    bool updated = false;
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
       check_variables();
+  
+  
 }
 
 bool retro_load_game(const struct retro_game_info *info)
