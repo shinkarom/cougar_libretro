@@ -24,9 +24,23 @@ namespace script {
 			return false;
 		}
 		
-		duk_eval_string_noresult(ctx, prgFile);
-		
+		if(duk_peval_string(ctx, prgFile)) {
+			std::cout<<"[COUGAR] "<<duk_safe_to_stacktrace(ctx, -1)<<std::endl;
+			return false;
+		}
 		delete[] prgFile;
+		return true;
+	}
+	
+	bool  callVBlank() {
+		duk_push_global_object(ctx);
+		duk_get_prop_string(ctx, -1, vblankName);
+		if(duk_is_callable(ctx, -1) && duk_pcall(ctx, 0)){
+			std::cout<<"[COUGAR] "<<duk_safe_to_stacktrace(ctx, -1)<<std::endl;
+			return false;
+		}
+		duk_pop(ctx);
+		duk_pop(ctx);
 		return true;
 	}
 	

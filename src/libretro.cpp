@@ -198,6 +198,10 @@ void retro_run(void)
 {
    update_input();
 	
+	if(!script::callVBlank()) {
+		environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, nullptr);
+	}
+	
 	video_cb(frameBuf, screenWidth, screenHeight, screenWidth*sizeof(uint32_t));
 
    bool updated = false;
