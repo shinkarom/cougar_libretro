@@ -12,8 +12,8 @@ namespace fs {
 	void close(int handle);
 	int64_t tell(int handle);
 	bool seek(int handle, uint64_t pos);
-	int64_t readBytes(int handle, void* buffer, uint64_t len);
+	int64_t readBytes(int handle, char* buffer, uint64_t len);
 	
-	int64_t readBinaryFile(const char* filename, void* buffer, bool doMAlloc = true);
-	int64_t readTextFile(const char* filename, void* buffer, bool doMAlloc = true);
+	int64_t readBinaryFile(const char* filename, char** buffer, bool doMAlloc = true);
+	int64_t readTextFile(const char* filename, char** buffer, bool doMAlloc = true);
 }

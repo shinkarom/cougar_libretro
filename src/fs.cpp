@@ -1,6 +1,8 @@
 #include "fs.h"
 #include "miniphysfs.h"
 
+#include <iostream>
+#include <cstring>
 
 namespace fs {
 	
@@ -75,7 +77,7 @@ namespace fs {
 		
 	}
 	
-	int64_t readBytes(int handle, void* buffer, uint64_t len) {
+	int64_t readBytes(int handle, char* buffer, uint64_t len) {
 		if(handle >= 32 || handle < 0 || !handles[handle]) {
 			return -1;
 		}
@@ -83,7 +85,7 @@ namespace fs {
 		return PHYSFS_readBytes(handles[handle], buffer, len);
 	}
 	
-	int64_t readBinaryFile(const char* filename, void* buffer, bool doMAlloc) {
+	int64_t readBinaryFile(const char* filename, char** buffer, bool doMAlloc) {
 		auto handle = open(filename);
 		if(handle == -1) {
 			return -1;
@@ -94,30 +96,34 @@ namespace fs {
 		}
 		
 		if (doMAlloc) {
-			buffer = new char[size];
+			*buffer = new char[size]();
 		}
 		
 		seek(handle, 0);
-		return readBytes(handle, buffer, size);
+		return readBytes(handle, *buffer, size);
 	}
 	
-	int64_t readTextFile(const char* filename, void* buffer, bool doMAlloc) {
+	int64_t readTextFile(const char* filename, char** buffer, bool doMAlloc) {
 		auto handle = open(filename);
 		if(handle == -1) {
+			std::cout<<"[COUGAR] Failed to open file "<<filename<<std::endl;
 			return -1;
 		}
 		auto size = PHYSFS_fileLength(handles[handle]);
 		if(size == -1) {
+			std::cout<<"[COUGAR] Failed to get size for "<<filename<<std::endl;
 			return -1;
 		}
 		
 		if (doMAlloc) {
-			buffer = new char[size+1]();
+			*buffer = new char[size+1]();
 		}
-		
+
 		seek(handle, 0);
-		auto r = readBytes(handle, buffer, size);
-		((char*)buffer)[size] = '\0';
+		auto r = readBytes(handle, *buffer, size);
+		
+		
+		(*buffer)[size] = '\0';
 		return r;
 	}
 	

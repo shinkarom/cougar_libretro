@@ -27,6 +27,7 @@ add_library(${LIBNAME} SHARED
 	src/miniphysfs.cpp
 	src/duktape/duktape.c
 	src/fs.cpp
+	src/script.cpp
     )
 set_target_properties(${LIBNAME} PROPERTIES
     SOVERSION 1

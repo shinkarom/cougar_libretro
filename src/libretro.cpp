@@ -5,6 +5,7 @@
 #include <cstring>
 #include <cmath>
 #include <cstring>
+#include <iostream>
 
 #include <stdio.h>
 #if defined(_WIN32) && !defined(_XBOX)
@@ -12,20 +13,20 @@
 #endif
 #include "libretro.h"
 #include "fmsynth.h"
-#include "duktape/duktape.h"
 #include "ymfm.h"
 
 #include "fs.h"
+#include "script.h"
 
 constexpr auto screenWidth = 320;
 constexpr auto screenHeight = 320;
 constexpr auto screenTotalPixels = screenWidth * screenHeight;
 constexpr auto audioSampleRate = 44100;
 
-static uint32_t *frame_buf;
+static uint32_t *frameBuf;
 static struct retro_log_callback logging;
 static retro_log_printf_t log_cb;
-static bool use_audio_cb;
+static bool useAudioCb;
 static float last_aspect;
 static float last_sample_rate;
 char retro_base_directory[4096];
@@ -46,9 +47,10 @@ static retro_environment_t environ_cb;
 void retro_init(void)
 {
 	fs::init();
+	script::init();
 	
-   frame_buf = new uint32_t[screenTotalPixels];
-   memset(frame_buf,0,screenTotalPixels*sizeof(uint32_t));
+   frameBuf = new uint32_t[screenTotalPixels];
+   memset(frameBuf,0,screenTotalPixels*sizeof(uint32_t));
    const char *dir = NULL;
    if (environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &dir) && dir)
    {
@@ -60,8 +62,9 @@ void retro_init(void)
 void retro_deinit(void)
 {
 	fs::deinit();
+	script::deinit();
 	
-   delete[] frame_buf;
+   delete[] frameBuf;
 }
 
 unsigned retro_api_version(void)
@@ -195,7 +198,7 @@ void retro_run(void)
 {
    update_input();
 	
-	video_cb(frame_buf, screenWidth, screenHeight, screenWidth*sizeof(uint32_t));
+	video_cb(frameBuf, screenWidth, screenHeight, screenWidth*sizeof(uint32_t));
 
    bool updated = false;
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
@@ -225,17 +228,21 @@ bool retro_load_game(const struct retro_game_info *info)
 
    snprintf(retro_game_path, sizeof(retro_game_path), "%s", info->path);
    struct retro_audio_callback audio_cb = { audio_callback, audio_set_state };
-   use_audio_cb = environ_cb(RETRO_ENVIRONMENT_SET_AUDIO_CALLBACK, &audio_cb);
+   useAudioCb = environ_cb(RETRO_ENVIRONMENT_SET_AUDIO_CALLBACK, &audio_cb);
 
 	struct retro_keyboard_callback cb = { keyboard_cb };
    environ_cb(RETRO_ENVIRONMENT_SET_KEYBOARD_CALLBACK, &cb);
 
    check_variables();
-
-	if(!fs::load(info->path)) {
+	
+	if(!fs::load(info->path)) {	
 		return false;
 	}
-
+	
+	if(!script::loadFile("/PRG/PRG.js")) {
+		return false;
+	}
+   
    (void)info;
    return true;
 }
