@@ -13,6 +13,7 @@ add_library(${LIBNAME} SHARED
     src/libretro.cpp
 	src/miniphysfs.cpp
 	src/duktape/duktape.c
+	src/fs.cpp
     )
 set_target_properties(${LIBNAME} PROPERTIES
     SOVERSION 1

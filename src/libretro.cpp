@@ -10,9 +10,10 @@
 #include <windows.h>
 #endif
 #include "libretro.h"
-#include "miniphysfs.h"
 #include "fmsynth.h"
 #include "duktape/duktape.h"
+
+#include "fs.h"
 
 constexpr auto screenWidth = 256;
 constexpr auto screenHeight = 384;
@@ -42,6 +43,8 @@ static retro_environment_t environ_cb;
 
 void retro_init(void)
 {
+	fs::init();
+	
    frame_buf = new uint32_t[screenTotalPixels];
    memset(frame_buf,0,screenTotalPixels*sizeof(uint32_t));
    const char *dir = NULL;
@@ -54,6 +57,8 @@ void retro_init(void)
 
 void retro_deinit(void)
 {
+	fs::deinit();
+	
    delete[] frame_buf;
 }
 
@@ -73,7 +78,7 @@ void retro_get_system_info(struct retro_system_info *info)
    info->library_name     = "Cougar fantasy console";
    info->library_version  = "0.1";
    info->need_fullpath    = true;
-   info->valid_extensions = "";
+   info->valid_extensions = "cart";
 }
 
 static retro_video_refresh_t video_cb;
@@ -222,6 +227,10 @@ bool retro_load_game(const struct retro_game_info *info)
    environ_cb(RETRO_ENVIRONMENT_SET_KEYBOARD_CALLBACK, &cb);
 
    check_variables();
+
+	if(!fs::load(info->path)) {
+		return false;
+	}
 
    (void)info;
    return true;
