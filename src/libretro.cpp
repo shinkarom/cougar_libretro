@@ -23,7 +23,7 @@
 
 constexpr auto screenWidth = 320;
 constexpr auto screenHeight = 320;
-constexpr auto screenTotalPixels = screenWidth * screenHeight;
+constexpr auto screenTotalPixels = ppu::maxScreenWidthPixels * ppu::maxScreenHeightPixels;
 constexpr auto audioSampleRate = 44100;
 
 static uint32_t *frameBuf;
