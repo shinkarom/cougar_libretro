@@ -35,6 +35,12 @@ static float last_sample_rate;
 char retro_base_directory[4096];
 char retro_game_path[4096];
 
+static retro_video_refresh_t video_cb;
+static retro_audio_sample_t audio_cb;
+static retro_audio_sample_batch_t audio_batch_cb;
+static retro_input_poll_t input_poll_cb;
+static retro_input_state_t input_state_cb;
+
 static void fallback_log(enum retro_log_level level, const char *fmt, ...)
 {
    (void)level;
@@ -94,12 +100,6 @@ void retro_get_system_info(struct retro_system_info *info)
    info->need_fullpath    = true;
    info->valid_extensions = "cart";
 }
-
-static retro_video_refresh_t video_cb;
-static retro_audio_sample_t audio_cb;
-static retro_audio_sample_batch_t audio_batch_cb;
-static retro_input_poll_t input_poll_cb;
-static retro_input_state_t input_state_cb;
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
@@ -170,7 +170,19 @@ void retro_reset(void)
 
 static void update_input(void)
 {
-
+	input_poll_cb();
+	
+	uint32_t buttons = 0;
+	
+	uint16_t state;
+	
+	for (int i = 0; i < input::numButtons; i++) {
+		state = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, i);
+		if(state) {
+			buttons |= (1 << (i+1));
+		}
+	}
+	input::setPressedButtons(buttons);
 }
 
 
