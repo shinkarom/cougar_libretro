@@ -28,6 +28,9 @@ add_library(${LIBNAME} SHARED
 	src/duktape/duktape.c
 	src/fs.cpp
 	src/script.cpp
+	src/input.cpp
+	src/ppu.cpp
+	src/apu.cpp
     )
 set_target_properties(${LIBNAME} PROPERTIES
     SOVERSION 1

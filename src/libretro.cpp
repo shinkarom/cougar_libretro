@@ -17,6 +17,9 @@
 
 #include "fs.h"
 #include "script.h"
+#include "input.h"
+#include "ppu.h"
+#include "apu.h"
 
 constexpr auto screenWidth = 320;
 constexpr auto screenHeight = 320;
@@ -48,6 +51,9 @@ void retro_init(void)
 {
 	fs::init();
 	script::init();
+	input::init();
+	ppu::init();
+	apu::deinit();
 	
    frameBuf = new uint32_t[screenTotalPixels];
    memset(frameBuf,0,screenTotalPixels*sizeof(uint32_t));
@@ -63,6 +69,9 @@ void retro_deinit(void)
 {
 	fs::deinit();
 	script::deinit();
+	input::deinit();
+	ppu::deinit();
+	apu::deinit();
 	
    delete[] frameBuf;
 }
