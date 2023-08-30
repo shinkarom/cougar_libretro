@@ -32,6 +32,18 @@ namespace script {
 		return true;
 	}
 	
+	bool callInit() {
+		duk_push_global_object(ctx);
+		duk_get_prop_string(ctx, -1, initName);
+		if(duk_is_callable(ctx, -1) && duk_pcall(ctx, 0)){
+			std::cout<<"[COUGAR] "<<duk_safe_to_stacktrace(ctx, -1)<<std::endl;
+			return false;
+		}
+		duk_pop(ctx);
+		duk_pop(ctx);
+		return true;
+	}
+	
 	bool  callVBlank() {
 		duk_push_global_object(ctx);
 		duk_get_prop_string(ctx, -1, vblankName);

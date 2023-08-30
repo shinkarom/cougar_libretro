@@ -212,7 +212,7 @@ static void audio_set_state(bool enable)
 static void keyboard_cb(bool down, unsigned keycode,
       uint32_t character, uint16_t mod)
 {
-
+	
 }
 
 void retro_run(void)
@@ -264,7 +264,7 @@ bool retro_load_game(const struct retro_game_info *info)
 		return false;
 	}
 	
-	if(!script::loadFile("/PRG/PRG.js")) {
+	if(!script::loadFile("/PRG/PRG.js") || !script::callInit()) {
 		return false;
 	}
    
