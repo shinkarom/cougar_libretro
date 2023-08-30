@@ -18,16 +18,23 @@ namespace ppu {
 	constexpr int totalTilemapSizeTiles = tilemapScrensWidth * tilemapScreensHeight * maxScreenWidthTiles * maxScreenHeightTiles;
 	constexpr int numTilemaps = 4;
 	
-	constexpr int tilePages = 256;
+	constexpr int numTilePages = 256;
 	constexpr int tilesPerPage = 256;
-	constexpr int totalTilesSizePixels = tileSizePixels * tilesPerPage * tilePages;
+	constexpr int pageSizePixels = tilesPerPage * tileSizePixels;
+	constexpr int pageSizeBytes = pageSizePixels * sizeof(uint32_t);
+	
+	constexpr int totalTilesSizePixels = tileSizePixels * tilesPerPage * numTilePages;
 	constexpr int totalTilesSizeBytes = totalTilesSizePixels * sizeof(uint32_t);
 	
 	extern uint32_t tiles[totalTilesSizeBytes];
 	using tilemap_t = uint16_t[totalTilemapSizeTiles];
 	extern tilemap_t tilemaps[numTilemaps];
 	
-	void init();
+	extern uint32_t tiles[totalTilesSizeBytes];
+	
+	void init(uint32_t** buffer);
 	void deinit();
+	
+	void loadTiles();
 	
 }

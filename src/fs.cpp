@@ -127,4 +127,14 @@ namespace fs {
 		return r;
 	}
 	
+	static PHYSFS_EnumerateCallbackResult printDir(void *data, const char *origdir, const char *fname)
+{
+    std::cout<<"[COUGAR] "<<origdir<<"/"<<fname<<std::endl;
+    return PHYSFS_ENUM_OK;  // give me more data, please.
+}
+	
+	void enumerate() {
+		PHYSFS_enumerate("/", printDir, nullptr);
+	}
+	
 }

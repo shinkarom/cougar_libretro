@@ -16,4 +16,6 @@ namespace fs {
 	
 	int64_t readBinaryFile(const char* filename, char** buffer, bool doMAlloc = true);
 	int64_t readTextFile(const char* filename, char** buffer, bool doMAlloc = true);
+	
+	void enumerate();
 }

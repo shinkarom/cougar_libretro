@@ -58,7 +58,7 @@ void retro_init(void)
 	fs::init();
 	script::init();
 	input::init();
-	ppu::init();
+	ppu::init(&frameBuf);
 	apu::deinit();
 	
    frameBuf = new uint32_t[screenTotalPixels];
@@ -267,6 +267,14 @@ bool retro_load_game(const struct retro_game_info *info)
 	if(!script::loadFile("/PRG/PRG.js") || !script::callInit()) {
 		return false;
 	}
+   
+   ppu::loadTiles();
+   
+   std::cout<<"[COUGAR]";
+   for(int i = 0; i < 64; i++) {
+	   std::cout<<" "<<ppu::tiles[i];
+   }
+   std::cout<<std::endl;
    
    (void)info;
    return true;
