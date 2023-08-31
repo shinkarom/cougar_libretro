@@ -268,11 +268,7 @@ bool retro_load_game(const struct retro_game_info *info)
    
    ppu::loadTiles();
    
-   std::cout<<"[COUGAR]";
-   for(int i = 0; i < 64; i++) {
-	   std::cout<<" "<<ppu::tiles[i];
-   }
-   std::cout<<std::endl;
+   apu::playFile(0, "egypt.vgm");
    
    (void)info;
    return true;

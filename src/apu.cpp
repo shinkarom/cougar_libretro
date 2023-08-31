@@ -1,7 +1,10 @@
 #include "apu.h"
+#include "fs.h"
 
 #include <cstring>
 #include <cmath>
+#include <cstdio>
+#include <iostream>
 
 namespace apu {
 	
@@ -28,6 +31,23 @@ namespace apu {
 	   phase %= 100;
 		
 		return buffer;
+	}
+	
+	void playFile(int playerNum, const char* fileName) {
+		if(playerNum<0 || playerNum>=maxPlayers) {
+			return;
+		}
+		char fullFilename[256];
+		sprintf(fullFilename, "/SND/%s", fileName);
+		
+		char* fileBuffer;
+		auto r = fs::readBinaryFile(fullFilename, &fileBuffer, true);
+		if(r==-1) {
+			std::cout<<"[COUGAR] Couldn't read file "<<fullFilename<<std::endl;
+			return;
+		}
+		// TODO remove this line after implementing players.
+		delete[] fileBuffer;
 	}
 	
 }
