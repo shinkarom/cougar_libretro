@@ -19,6 +19,7 @@
 #include "input.h"
 #include "ppu.h"
 #include "apu.h"
+#include "stb_vorbis.h"
 
 constexpr auto screenWidth = 320;
 constexpr auto screenHeight = 320;
@@ -268,7 +269,7 @@ bool retro_load_game(const struct retro_game_info *info)
    
    ppu::loadTiles();
    
-   apu::playFile(0, "egypt.vgm");
+   //apu::playFile(0, "goodtimes1.ogg");
    
    (void)info;
    return true;

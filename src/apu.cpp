@@ -5,10 +5,14 @@
 #include <cmath>
 #include <cstdio>
 #include <iostream>
+#include "stb_vorbis.h"
 
 namespace apu {
 	
 	static uint16_t buffer[samplesPerTick*2];
+	
+	short* output;
+	bool playing = false;
 	
 	void init() {
 		memset(buffer, 0, apu::samplesPerTick*2*2);
@@ -20,15 +24,18 @@ namespace apu {
 	
 	uint16_t* process() {
 		static unsigned phase;
-	   for (unsigned i = 0; i < samplesPerTick; i++, phase++)
+	   for (unsigned i = 0; i < samplesPerTick; i++)
 	   {
-		  int16_t val = 0x800 * sinf(2.0f * M_PI * phase * 
-			(audioSampleRate*1.0f/100) / (audioSampleRate *1.0f));
-		  buffer[i * 2] = val;
-		  buffer[i * 2 + 1] = val;
+		if(playing) {
+			buffer[i * 2] = output[phase];
+			buffer[i * 2 + 1] = output[phase];
+			phase++;
+		} else {
+			buffer[i * 2] = 0;
+			buffer[i * 2 + 1] = 0;
+		}
+		  
 	   }
-
-	   phase %= 100;
 		
 		return buffer;
 	}
@@ -46,6 +53,17 @@ namespace apu {
 			std::cout<<"[COUGAR] Couldn't read file "<<fullFilename<<std::endl;
 			return;
 		}
+		
+		int error;
+		auto alloc_buffer = new stb_vorbis_alloc;
+		int channels = 0;
+		int sample_rate = 0;
+		auto n = stb_vorbis_decode_memory((unsigned char*)fileBuffer, r,
+                                  &channels, &sample_rate, &output);
+		if(channels > 1 || sample_rate != audioSampleRate) {
+			std::cout<<"[COUGAR] Can't play "<<fileName<<", must be mono with sample rate "<<audioSampleRate<<"."<<std::endl;
+		}
+		playing = true;
 		// TODO remove this line after implementing players.
 		delete[] fileBuffer;
 	}

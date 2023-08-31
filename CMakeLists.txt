@@ -31,6 +31,7 @@ add_library(${LIBNAME} SHARED
 	src/input.cpp
 	src/ppu.cpp
 	src/apu.cpp
+	src/stb_vorbis.c
     )
 set_target_properties(${LIBNAME} PROPERTIES
     SOVERSION 1
