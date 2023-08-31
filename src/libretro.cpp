@@ -3,7 +3,6 @@
 #include <cstdlib>
 #include <cstdarg>
 #include <cstring>
-#include <cmath>
 #include <cstring>
 #include <iostream>
 
@@ -24,7 +23,6 @@
 constexpr auto screenWidth = 320;
 constexpr auto screenHeight = 320;
 constexpr auto screenTotalPixels = ppu::maxScreenWidthPixels * ppu::maxScreenHeightPixels;
-constexpr auto audioSampleRate = 44100;
 
 static uint32_t *frameBuf;
 static struct retro_log_callback logging;
@@ -55,14 +53,16 @@ static retro_environment_t environ_cb;
 
 void retro_init(void)
 {
-	fs::init();
+	
+   frameBuf = new uint32_t[screenTotalPixels];
+   memset(frameBuf,0,screenTotalPixels*4);
+   
+   fs::init();
 	script::init();
 	input::init();
 	ppu::init(&frameBuf);
-	apu::deinit();
-	
-   frameBuf = new uint32_t[screenTotalPixels];
-   memset(frameBuf,0,screenTotalPixels*sizeof(uint32_t));
+	apu::init();
+   
    const char *dir = NULL;
    if (environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &dir) && dir)
    {
@@ -104,7 +104,7 @@ void retro_get_system_info(struct retro_system_info *info)
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
    float aspect                = 0.0f;
-   float sampling_rate         = audioSampleRate*1.0f;
+   float sampling_rate         = apu::audioSampleRate*1.0f;
 
 
    info->geometry.base_width   = screenWidth;
@@ -193,15 +193,11 @@ static void check_variables(void)
 
 static void audio_callback(void)
 {
-	static unsigned phase;
-   for (unsigned i = 0; i < audioSampleRate / 60; i++, phase++)
+	auto b = apu::process();
+   for (unsigned i = 0; i < apu::samplesPerTick; i++)
    {
-      int16_t val = 0x800 * sinf(2.0f * M_PI * phase * 
-		(audioSampleRate*1.0f/100) / (audioSampleRate *1.0f));
-      audio_cb(val, val);
+      audio_cb(b[i*2], b[i*2+1]);
    }
-
-   phase %= 100;
 }
 
 static void audio_set_state(bool enable)
@@ -222,6 +218,8 @@ void retro_run(void)
 	if(!script::callVBlank()) {
 		environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, nullptr);
 	}
+	
+	ppu::process();
 	
 	video_cb(frameBuf, screenWidth, screenHeight, screenWidth*sizeof(uint32_t));
 

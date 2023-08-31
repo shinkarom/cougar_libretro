@@ -37,4 +37,6 @@ namespace ppu {
 	
 	void loadTiles();
 	
+	void process();
+	
 }
