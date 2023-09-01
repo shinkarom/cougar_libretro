@@ -4,7 +4,7 @@
 
 namespace apu {
 	
-	constexpr auto audioSampleRate = 44100;
+	constexpr auto audioSampleRate = 11025;
 	constexpr auto samplesPerTick = audioSampleRate / 60;
 	constexpr auto maxPlayers = 4;
 	

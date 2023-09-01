@@ -113,6 +113,9 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
    info->geometry.max_width    = screenWidth;
    info->geometry.max_height   = screenHeight;
    info->geometry.aspect_ratio = aspect;
+   
+   info->timing.sample_rate = sampling_rate;
+   info->timing.fps = 60;
 
    last_aspect                 = aspect;
    last_sample_rate            = sampling_rate;
@@ -269,7 +272,7 @@ bool retro_load_game(const struct retro_game_info *info)
    
    ppu::loadTiles();
    
-   //apu::playFile(0, "goodtimes.ogg");
+   apu::playFile(0, "goodtimes.ogg");
    
    (void)info;
    return true;
