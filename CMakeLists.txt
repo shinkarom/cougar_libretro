@@ -32,6 +32,7 @@ add_library(${LIBNAME} SHARED
 	src/ppu.cpp
 	src/apu.cpp
 	src/stb_vorbis.c
+	src/miniaudio.c
     )
 set_target_properties(${LIBNAME} PROPERTIES
     SOVERSION 1
