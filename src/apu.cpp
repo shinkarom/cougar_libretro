@@ -1,5 +1,6 @@
 #include "apu.h"
 #include "fs.h"
+#include "audioplayer.h"
 
 #include <cstring>
 #include <cmath>
@@ -7,16 +8,21 @@
 #include <iostream>
 #include "stb_vorbis.h"
 
+#include "audioplayer.h"
+
 namespace apu {	
+
+	constexpr int sqrs[4] = {100, 141, 173, 200};
 	
 	static uint16_t buffer[samplesPerTick*2];
 	int pos;
+	Player players[maxPlayers];
 	
 	short* output;
 	bool playing = false;
 	
 	void init() {
-		memset(buffer, 0, apu::samplesPerTick*2*2);
+		memset(buffer, 0, samplesPerTick*2*2);
 	}
 	
 	void deinit() {
@@ -25,13 +31,26 @@ namespace apu {
 	
 	uint16_t* process() {
 		memset(buffer, 0, samplesPerTick * 2);
+		int64_t sample = 0;
+		int playings = 0;
 		if(!playing) {
 			
 		} else {
-			for(int i = 0; i<samplesPerTick; i++) {
-				buffer[i*2] = output[pos];
-				buffer[i*2+1] = output[pos];
-				pos++;
+			for (int i = 0; i<maxPlayers; i++) {
+				players[i].process();
+				if(players[i].isPlaying()) {
+					playings++;
+				}
+			}
+			for(int s = 0; s<samplesPerTick*2; s++) {
+				sample = 0;
+				for (int i = 0; i<maxPlayers; i++) {
+					if(players[i].isPlaying()) {
+						sample += players[i].getBuffer()[s];
+					}
+				}
+				sample = sample * 100 / sqrs[playings];
+				buffer[s] = (int16_t)sample;
 			}
 		}
 				
@@ -62,10 +81,18 @@ namespace apu {
 		if(result == -1) {
 			std::cout<<"[COUGAR] couldn't decode "<<fileName<<std::endl;
 		} else {
+			players[playerNum].loadTrack(output);
 			std::cout<<"[COUGAR] "<<sample_rate<<std::endl;
 			playing = true;
 		}
 		
+	}
+
+	void setVolume(int playerNum, int value) {
+		if(playerNum<0 || playerNum>=maxPlayers) {
+			return;
+		}
+		players[playerNum].setVolume(value);
 	}
 	
 }

@@ -11,9 +11,8 @@
 #include <windows.h>
 #endif
 #include "libretro.h"
-#include "fmsynth.h"
-#include "ymfm.h"
 
+#include "common.h"
 #include "fs.h"
 #include "script.h"
 #include "input.h"
@@ -23,7 +22,7 @@
 
 constexpr auto screenWidth = 320;
 constexpr auto screenHeight = 320;
-constexpr auto screenTotalPixels = ppu::maxScreenWidthPixels * ppu::maxScreenHeightPixels;
+constexpr auto screenTotalPixels = maxScreenWidthPixels * maxScreenHeightPixels;
 
 static uint32_t *frameBuf;
 static struct retro_log_callback logging;
@@ -105,7 +104,7 @@ void retro_get_system_info(struct retro_system_info *info)
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
    float aspect                = 0.0f;
-   float sampling_rate         = apu::audioSampleRate*1.0f;
+   float sampling_rate         = audioSampleRate*1.0f;
 
 
    info->geometry.base_width   = screenWidth;
@@ -115,7 +114,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
    info->geometry.aspect_ratio = aspect;
    
    info->timing.sample_rate = sampling_rate;
-   info->timing.fps = 60;
+   info->timing.fps = fps;
 
    last_aspect                 = aspect;
    last_sample_rate            = sampling_rate;
@@ -198,7 +197,7 @@ static void check_variables(void)
 static void audio_callback(void)
 {
 	auto b = apu::process();
-   for (unsigned i = 0; i < apu::samplesPerTick; i++)
+   for (unsigned i = 0; i < samplesPerTick; i++)
    {
       audio_cb(b[i*2], b[i*2+1]);
    }
@@ -272,7 +271,7 @@ bool retro_load_game(const struct retro_game_info *info)
    
    ppu::loadTiles();
    
-   apu::playFile(0, "goodtimes.ogg");
+   apu::playFile(0, "sc2k.ogg");
    
    (void)info;
    return true;

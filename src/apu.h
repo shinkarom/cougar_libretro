@@ -1,12 +1,9 @@
 #pragma once
 
 #include <cstdint>
+#include "common.h"
 
 namespace apu {
-	
-	constexpr auto audioSampleRate = 11025;
-	constexpr auto samplesPerTick = audioSampleRate / 60;
-	constexpr auto maxPlayers = 4;
 	
 	void init();
 	void deinit();
@@ -14,4 +11,5 @@ namespace apu {
 	uint16_t* process();
 	
 	void playFile(int playerNum, const char* fileName);
+	void setVolume(int playerNum, int value);
 }
