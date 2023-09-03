@@ -12,4 +12,6 @@ namespace apu {
 	
 	void playFile(int playerNum, const char* fileName);
 	void setVolume(int playerNum, int value);
+	void play(int playerNum);
+	void stop(int playerNum);
 }

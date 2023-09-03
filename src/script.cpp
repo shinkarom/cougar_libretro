@@ -73,9 +73,23 @@ namespace script {
 		return 0;
 	}
 	
+	duk_ret_t apiPlay(duk_context* ctx) {
+		auto playerNum = duk_get_int(ctx, -2);
+		apu::play(playerNum);
+		return 0;
+	}
+	
+	duk_ret_t apiStop(duk_context* ctx) {
+		auto playerNum = duk_get_int(ctx, -2);
+		apu::stop(playerNum);
+		return 0;
+	}
+	
 	const duk_function_list_entry cougarApi[] = {
 		{"playTrack", apiPlayTrack, 2},
 		{"setVolume", apiSetVolume, 2},
+		{"play", apiPlay, 1},
+		{"stop", apiStop, 1},
 		{nullptr, nullptr, 0}
 	};
 	

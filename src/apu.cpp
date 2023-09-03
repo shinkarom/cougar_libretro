@@ -94,4 +94,18 @@ namespace apu {
 		players[playerNum].setVolume(value);
 	}
 	
+	void play(int playerNum) { 
+		if(playerNum<0 || playerNum>=maxPlayers) {
+			return;
+		}
+		players[playerNum].start();
+	}
+	
+	void stop(int playerNum) {
+		if(playerNum<0 || playerNum>=maxPlayers) {
+			return;
+		}
+		players[playerNum].stop();
+	}
+	
 }

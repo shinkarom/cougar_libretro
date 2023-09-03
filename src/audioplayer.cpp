@@ -20,7 +20,7 @@ void Player::loadTrack(int16_t* tr, int length) {
 	loopStart = 0;
 	loopEnd = trackLength;
 	active = true;
-	playing = true;
+	playing = false;
 	looping = false;
 	pos = 0;
 }
