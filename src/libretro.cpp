@@ -265,13 +265,17 @@ bool retro_load_game(const struct retro_game_info *info)
 		return false;
 	}
 	
-	if(!script::loadFile("/PRG/PRG.js") || !script::callInit()) {
+	if(!script::loadFile("/PRG/PRG.js")) {
+		return false;
+	}
+   
+   script::addApi();
+   
+   if(!script::callInit()) {
 		return false;
 	}
    
    ppu::loadTiles();
-   
-   apu::playFile(0, "sc2k.ogg");
    
    (void)info;
    return true;

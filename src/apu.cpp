@@ -37,8 +37,7 @@ namespace apu {
 			
 		} else {
 			for (int i = 0; i<maxPlayers; i++) {
-				players[i].process();
-				if(players[i].isPlaying()) {
+				if(players[i].process()) {
 					playings++;
 				}
 			}
@@ -81,8 +80,8 @@ namespace apu {
 		if(result == -1) {
 			std::cout<<"[COUGAR] couldn't decode "<<fileName<<std::endl;
 		} else {
-			players[playerNum].loadTrack(output);
-			std::cout<<"[COUGAR] "<<sample_rate<<std::endl;
+			players[playerNum].loadTrack(output, result	);
+			std::cout<<"[COUGAR] "<<sample_rate<<" "<<result<<std::endl;
 			playing = true;
 		}
 		

@@ -1,6 +1,8 @@
 #include "audioplayer.h"
 
 #include <cstring>
+#include <cstdlib>
+#include <iostream>
 #include "stb_vorbis.h"
 
 Player::Player() {
@@ -12,26 +14,40 @@ Player::Player() {
 Player::~Player() {
 	
 }
-void Player::loadTrack(int16_t* tr) {
+void Player::loadTrack(int16_t* tr, int length) {
 	track = tr;
-	pos = 0;
+	trackLength = length;
+	loopStart = 0;
+	loopEnd = trackLength;
 	active = true;
 	playing = true;
+	looping = false;
+	pos = 0;
 }
 
-int16_t* Player::process() {
+bool Player::process() {
 	memset(buffer, 0, samplesPerTick * 2);
 	if(!playing) {
-		
+		return false;
 	} else {
-		for(int i = 0; i<samplesPerTick; i++) {
+		auto finalPos = looping ? loopEnd : trackLength;
+		auto remaining = finalPos - pos;
+		auto samplesNow = remaining < samplesPerTick ? remaining : samplesPerTick;
+		for(int i = 0; i<samplesNow; i++) {
 			buffer[i*2] = track[pos] / 100*volume;
 			buffer[i*2+1] = track[pos]/ 100*volume;
 			pos++;
 		}
+		if(samplesNow < samplesPerTick) {
+			if(looping) {
+				pos = loopStart;
+			} else {
+				playing = false;
+				pos = 0;
+			}
+		}
 	}
-			
-	return buffer;
+	return true;
 }
 
 void Player::seek(int position) {
@@ -59,4 +75,52 @@ void Player::setVolume(int value) {
 		return;
 	}
 	volume = value;
+}
+
+void Player::unloadTrack() {
+	free(track);
+	active = false;
+	playing = false;
+	pos = 0;
+	trackLength = 0;
+}
+
+int64_t Player::getLength() {
+	return trackLength;
+}
+
+int64_t Player::getLoopStart() {
+	return loopStart;
+}
+
+int64_t Player::getLoopEnd() {
+	return loopEnd;
+}
+
+void Player::setLoopStart(int64_t value) {
+	if(value >= 0 && value < loopEnd) {
+		loopStart = value;
+	}
+}
+
+void Player::setLoopEnd(int64_t value) {
+	if(value <= trackLength && value > loopStart) {
+		loopEnd = value;
+	}
+}
+
+bool Player::getLooping() {
+	return looping;
+}
+
+void Player::setLooping(bool value) {
+	looping = true;
+}
+
+void Player::start() {
+	playing = true;
+}
+
+void Player::stop() {
+	playing = false;
 }

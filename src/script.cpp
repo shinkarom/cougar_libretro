@@ -2,6 +2,7 @@
 
 #include "duktape/duktape.h"
 #include "fs.h"
+#include "apu.h"
 
 #include <iostream>
 
@@ -44,7 +45,7 @@ namespace script {
 		return true;
 	}
 	
-	bool  callVBlank() {
+	bool callVBlank() {
 		duk_push_global_object(ctx);
 		duk_get_prop_string(ctx, -1, vblankName);
 		if(duk_is_callable(ctx, -1) && duk_pcall(ctx, 0)){
@@ -56,4 +57,25 @@ namespace script {
 		return true;
 	}
 	
+	duk_ret_t apiPlayTrack(duk_context *ctx) {
+		//ensure 2 arguments via duk_get_top
+		const char* fileName = duk_get_string(ctx, -1);
+		auto playerNum = duk_get_int(ctx, -2);
+		apu::playFile(playerNum, fileName);
+		return 0;
+	}
+	
+	const duk_function_list_entry cougarApi[] = {
+		{"playTrack", apiPlayTrack, 2},
+		{nullptr, nullptr, 0}
+	};
+	
+	void addApi() {
+		duk_push_global_object(ctx);
+		duk_push_object(ctx);
+		duk_put_prop_string(ctx, -2, globalObjectName);
+		duk_get_prop_string(ctx, -1, globalObjectName);
+		duk_put_function_list(ctx, -1, cougarApi);
+		duk_pop(ctx);
+	}
 }
