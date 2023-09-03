@@ -3,6 +3,7 @@
 #include "duktape/duktape.h"
 #include "fs.h"
 #include "apu.h"
+#include "ppu.h"
 
 #include <iostream>
 
@@ -57,11 +58,11 @@ namespace script {
 		return true;
 	}
 	
-	duk_ret_t apiPlayTrack(duk_context *ctx) {
+	duk_ret_t apiLoadTrack(duk_context *ctx) {
 		//ensure 2 arguments via duk_get_top
 		const char* fileName = duk_get_string(ctx, -1);
 		auto playerNum = duk_get_int(ctx, -2);
-		apu::playFile(playerNum, fileName);
+		apu::loadFile(playerNum, fileName);
 		return 0;
 	}
 	
@@ -85,11 +86,19 @@ namespace script {
 		return 0;
 	}
 	
+	duk_ret_t apiSetResolution(duk_context* ctx) {
+		auto h = duk_get_int(ctx, -1);
+		auto w = duk_get_int(ctx, -2);
+		ppu::setResolution(w, h);
+		return 0;
+	}
+	
 	const duk_function_list_entry cougarApi[] = {
-		{"playTrack", apiPlayTrack, 2},
+		{"loadTrack", apiLoadTrack, 2},
 		{"setVolume", apiSetVolume, 2},
 		{"play", apiPlay, 1},
 		{"stop", apiStop, 1},
+		{"setResolution", apiSetResolution, 2},
 		{nullptr, nullptr, 0}
 	};
 	

@@ -20,10 +20,6 @@
 #include "apu.h"
 #include "stb_vorbis.h"
 
-constexpr auto screenWidth = 320;
-constexpr auto screenHeight = 320;
-constexpr auto screenTotalPixels = maxScreenWidthPixels * maxScreenHeightPixels;
-
 static uint32_t *frameBuf;
 static struct retro_log_callback logging;
 static retro_log_printf_t log_cb;
@@ -38,6 +34,11 @@ static retro_audio_sample_t audio_cb;
 static retro_audio_sample_batch_t audio_batch_cb;
 static retro_input_poll_t input_poll_cb;
 static retro_input_state_t input_state_cb;
+static retro_environment_t environ_cb;
+
+int screenWidth = maxScreenWidthPixels;
+int screenHeight = maxScreenHeightPixels;
+int screenTotalPixels = screenWidth * screenHeight;
 
 static void fallback_log(enum retro_log_level level, const char *fmt, ...)
 {
@@ -48,19 +49,31 @@ static void fallback_log(enum retro_log_level level, const char *fmt, ...)
    va_end(va);
 }
 
-
-static retro_environment_t environ_cb;
+void setResolution(int w, int h) {
+	if(w<0 || w>maxScreenWidthPixels || h<0 || h>maxScreenHeightPixels) {
+		return;
+	}
+	retro_game_geometry geo;
+	geo.base_width = w;
+	geo.base_height = h;
+	geo.aspect_ratio = 0.0f;
+	if(environ_cb(RETRO_ENVIRONMENT_SET_GEOMETRY, &geo)) {
+		screenWidth = w;
+		screenHeight = h;
+		std::cout<<"[COUGAR] changed resolution to "<<w<<" "<<h<<std::endl;
+	}
+}
 
 void retro_init(void)
 {
 	
-   frameBuf = new uint32_t[screenTotalPixels];
-   memset(frameBuf,0,screenTotalPixels*4);
+   frameBuf = new uint32_t[maxScreenTotalPixels];
+   memset(frameBuf,0,maxScreenTotalPixels*4);
    
    fs::init();
 	script::init();
 	input::init();
-	ppu::init(&frameBuf);
+	ppu::init(&frameBuf, &setResolution);
 	apu::init();
    
    const char *dir = NULL;
@@ -107,10 +120,10 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
    float sampling_rate         = audioSampleRate*1.0f;
 
 
-   info->geometry.base_width   = screenWidth;
-   info->geometry.base_height  = screenHeight;
-   info->geometry.max_width    = screenWidth;
-   info->geometry.max_height   = screenHeight;
+   info->geometry.base_width   = maxScreenWidthPixels;
+   info->geometry.base_height  = maxScreenHeightPixels;
+   info->geometry.max_width    = maxScreenWidthPixels;
+   info->geometry.max_height   = maxScreenHeightPixels;
    info->geometry.aspect_ratio = aspect;
    
    info->timing.sample_rate = sampling_rate;

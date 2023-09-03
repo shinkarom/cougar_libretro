@@ -33,30 +33,26 @@ namespace apu {
 		memset(buffer, 0, samplesPerTick * 2);
 		int64_t sample = 0;
 		int playings = 0;
-		if(!playing) {
-			
-		} else {
+		for (int i = 0; i<maxPlayers; i++) {
+			if(players[i].process()) {
+				playings++;
+			}
+		}
+		for(int s = 0; s<samplesPerTick*2; s++) {
+			sample = 0;
 			for (int i = 0; i<maxPlayers; i++) {
-				if(players[i].process()) {
-					playings++;
+				if(players[i].isPlaying()) {
+					sample += players[i].getBuffer()[s];
 				}
 			}
-			for(int s = 0; s<samplesPerTick*2; s++) {
-				sample = 0;
-				for (int i = 0; i<maxPlayers; i++) {
-					if(players[i].isPlaying()) {
-						sample += players[i].getBuffer()[s];
-					}
-				}
-				sample = sample * 100 / sqrs[playings];
-				buffer[s] = (int16_t)sample;
-			}
+			sample = sample * 100 / sqrs[playings];
+			buffer[s] = (int16_t)sample;
 		}
 				
 		return buffer;
 	}
 	
-	void playFile(int playerNum, const char* fileName) {
+	void loadFile(int playerNum, const char* fileName) {
 		if(playerNum<0 || playerNum>=maxPlayers) {
 			return;
 		}
@@ -82,7 +78,6 @@ namespace apu {
 		} else {
 			players[playerNum].loadTrack(output, result	);
 			std::cout<<"[COUGAR] "<<sample_rate<<" "<<result<<std::endl;
-			playing = true;
 		}
 		
 	}

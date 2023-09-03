@@ -1,5 +1,7 @@
 #pragma once
 
+typedef void (*set_resolution_t)(int w, int h);
+
 constexpr auto fps = 30;
 constexpr auto audioSampleRate = 11025;
 constexpr auto samplesPerTick = audioSampleRate / fps;
@@ -15,6 +17,7 @@ constexpr int maxScreenHeightTiles = 40;
 
 constexpr int maxScreenWidthPixels = maxScreenWidthTiles * tileWidth;
 constexpr int maxScreenHeightPixels = maxScreenHeightTiles * tileHeight;
+constexpr int maxScreenTotalPixels = maxScreenWidthPixels * maxScreenHeightPixels;
 
 constexpr int tilemapScrensWidth = 2;
 constexpr int tilemapScreensHeight = 2;

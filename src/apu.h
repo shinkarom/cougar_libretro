@@ -10,7 +10,7 @@ namespace apu {
 	
 	uint16_t* process();
 	
-	void playFile(int playerNum, const char* fileName);
+	void loadFile(int playerNum, const char* fileName);
 	void setVolume(int playerNum, int value);
 	void play(int playerNum);
 	void stop(int playerNum);

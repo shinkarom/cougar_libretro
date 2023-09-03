@@ -7,8 +7,16 @@
 
 namespace ppu {
 	
+	int windowWidth = maxScreenWidthPixels;
+	int windowHeight = maxScreenHeightPixels;
+	//int screenTotalPixels = screenWidth * screenHeight;
+	
 	uint32_t tiles[totalTilesSizeBytes];
 	tilemap_t tilemaps[numTilemaps];
+	
+	set_resolution_t resolution_cb;
+	
+	uint32_t window[maxScreenTotalPixels];
 	
 	uint32_t** frameBuf;
 	
@@ -32,8 +40,9 @@ namespace ppu {
 		}		
 	}
 	
-	void init(uint32_t** buffer) {
+	void init(uint32_t** buffer, set_resolution_t resovalue) {
 		frameBuf = buffer;
+		resolution_cb = resovalue;
 		
 		for(int i = 0; i < numTilemaps; i++) {
 			memset(tilemaps[i],totalTilemapSizeTiles,0);
@@ -46,6 +55,13 @@ namespace ppu {
 	
 	void process() {
 		
+	}
+	
+	void setResolution(int w, int h) {
+		if(w<0 || w>maxScreenWidthPixels || h<0 || h>maxScreenHeightPixels) {
+			return;
+		}
+		resolution_cb(w, h);
 	}
 	
 }
