@@ -60,7 +60,6 @@ void setResolution(int w, int h) {
 	if(environ_cb(RETRO_ENVIRONMENT_SET_GEOMETRY, &geo)) {
 		screenWidth = w;
 		screenHeight = h;
-		std::cout<<"[COUGAR] changed resolution to "<<w<<" "<<h<<std::endl;
 	}
 }
 

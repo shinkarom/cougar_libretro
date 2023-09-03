@@ -66,6 +66,15 @@ namespace script {
 		return 0;
 	}
 	
+	duk_ret_t apiPlayTrack(duk_context *ctx) {
+		//ensure 2 arguments via duk_get_top
+		const char* fileName = duk_get_string(ctx, -1);
+		auto playerNum = duk_get_int(ctx, -2);
+		apu::loadFile(playerNum, fileName);
+		apu::play(playerNum);
+		return 0;
+	}
+	
 	duk_ret_t apiSetVolume(duk_context* ctx) {
 		//ensure 2 arguments via duk_get_top
 		auto value = duk_get_int(ctx, -1);
@@ -95,6 +104,7 @@ namespace script {
 	
 	const duk_function_list_entry cougarApi[] = {
 		{"loadTrack", apiLoadTrack, 2},
+		{"playTrack", apiPlayTrack, 2},
 		{"setVolume", apiSetVolume, 2},
 		{"play", apiPlay, 1},
 		{"stop", apiStop, 1},
