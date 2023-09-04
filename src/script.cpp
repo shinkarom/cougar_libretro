@@ -76,7 +76,6 @@ namespace script {
 	}
 	
 	duk_ret_t apiSetVolume(duk_context* ctx) {
-		//ensure 2 arguments via duk_get_top
 		auto value = duk_get_int(ctx, -1);
 		auto playerNum = duk_get_int(ctx, -2);
 		apu::setVolume(playerNum, value);
@@ -103,19 +102,30 @@ namespace script {
 	}
 	
 	duk_ret_t apiClearScreen(duk_context* ctx) {
-		auto color = (uint32_t)duk_get_number(ctx, -1);
+		auto color = duk_to_uint32(ctx, -1);
 		ppu::clearScreen(color);
+		return 0;
+	}
+	
+	duk_ret_t apiDrawSprite(duk_context* ctx) {
+		auto index = duk_to_uint32(ctx, -5);
+		auto x = duk_to_int(ctx, -4);
+		auto y = duk_to_int(ctx, -3);
+		auto fliph = duk_to_boolean(ctx, -2);
+		auto flipv = duk_to_boolean(ctx, -1);
+		ppu::drawSprite(index, x, y, fliph, flipv);
 		return 0;
 	}
 	
 	const duk_function_list_entry cougarApi[] = {
 		{"loadTrack", apiLoadTrack, 2},
 		{"playTrack", apiPlayTrack, 2},
-		{"setVolume", apiSetVolume, 2},
+		{"volume", apiSetVolume, 2},
 		{"play", apiPlay, 1},
 		{"stop", apiStop, 1},
-		{"setResolution", apiSetResolution, 2},
-		{"clearScreen", apiClearScreen, 1},
+		{"resolution", apiSetResolution, 2},
+		{"clear", apiClearScreen, 1},
+		{"sprite", apiDrawSprite, 5},
 		{nullptr, nullptr, 0}
 	};
 	
