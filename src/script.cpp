@@ -138,6 +138,27 @@ namespace script {
 		return 1;
 	}
 	
+	duk_ret_t apiSeek(duk_context* ctx) {
+		auto playerNum = duk_to_int(ctx, -2);
+		auto pos = duk_to_int(ctx, -1);
+		apu::seek(playerNum, pos);
+		return 0;
+	}
+	
+	duk_ret_t apiTell(duk_context* ctx) {
+		auto playerNum = duk_to_int(ctx, -1);
+		auto t = apu::tell(playerNum);
+		duk_push_int(ctx, t);
+		return 1;
+	}
+	
+	duk_ret_t apiTrackLength(duk_context*ctx) {
+		auto playerNum = duk_to_int(ctx, -1);
+		auto l = apu::trackLength(playerNum);
+		duk_push_int(ctx, l);
+		return 1;
+	}
+	
 	const duk_function_list_entry cougarApi[] = {
 		{"loadTrack", apiLoadTrack, 2},
 		{"playTrack", apiPlayTrack, 2},
@@ -149,6 +170,9 @@ namespace script {
 		{"sprite", apiDrawSprite, 5},
 		{"buttonPressed", apiButtonPressed, 1},
 		{"buttonReleased", apiButtonReleased, 1},
+		{"tell", apiTell, 1},
+		{"seek", apiSeek, 2},
+		{"trackLength", apiTrackLength, 1},
 		{nullptr, nullptr, 0}
 	};
 	

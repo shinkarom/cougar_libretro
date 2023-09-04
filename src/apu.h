@@ -14,4 +14,7 @@ namespace apu {
 	void setVolume(int playerNum, int value);
 	void play(int playerNum);
 	void stop(int playerNum);
+	int32_t tell(int playerNum);
+	void seek(int playerNum, int32_t pos);
+	int32_t trackLength(int playerNum);
 }

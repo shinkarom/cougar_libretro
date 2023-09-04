@@ -103,4 +103,25 @@ namespace apu {
 		players[playerNum].stop();
 	}
 	
+	int32_t tell(int playerNum) {
+		if(playerNum<0 || playerNum>=maxPlayers) {
+			return -1;
+		}
+		return players[playerNum].tell();
+	}
+	
+	void seek(int playerNum, int32_t pos) {
+		if(playerNum<0 || playerNum>=maxPlayers) {
+			return;
+		}
+		players[playerNum].seek(pos);
+	}
+	
+	int32_t trackLength(int playerNum) {
+		if(playerNum<0 || playerNum>=maxPlayers) {
+			return -1;
+		}
+		return players[playerNum].getLength();
+	}
+	
 }
