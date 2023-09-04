@@ -3,7 +3,7 @@
 typedef void (*set_resolution_t)(int w, int h);
 
 constexpr auto fps = 30;
-constexpr auto audioSampleRate = 11025;
+constexpr auto audioSampleRate = 22050;
 constexpr auto samplesPerTick = audioSampleRate / fps;
 constexpr auto maxPlayers = 4;
 	

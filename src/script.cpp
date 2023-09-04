@@ -102,6 +102,12 @@ namespace script {
 		return 0;
 	}
 	
+	duk_ret_t apiClearScreen(duk_context* ctx) {
+		auto color = (uint32_t)duk_get_number(ctx, -1);
+		ppu::clearScreen(color);
+		return 0;
+	}
+	
 	const duk_function_list_entry cougarApi[] = {
 		{"loadTrack", apiLoadTrack, 2},
 		{"playTrack", apiPlayTrack, 2},
@@ -109,6 +115,7 @@ namespace script {
 		{"play", apiPlay, 1},
 		{"stop", apiStop, 1},
 		{"setResolution", apiSetResolution, 2},
+		{"clearScreen", apiClearScreen, 1},
 		{nullptr, nullptr, 0}
 	};
 	
