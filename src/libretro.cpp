@@ -194,7 +194,7 @@ static void update_input(void)
 	for (int i = 0; i < input::numButtons; i++) {
 		state = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, i);
 		if(state) {
-			buttons |= (1 << (i+1));
+			buttons |= (1 << (buttonMapping[i]+1));
 		}
 	}
 	input::setPressedButtons(buttons);

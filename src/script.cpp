@@ -4,6 +4,7 @@
 #include "fs.h"
 #include "apu.h"
 #include "ppu.h"
+#include "input.h"
 
 #include <iostream>
 
@@ -117,6 +118,26 @@ namespace script {
 		return 0;
 	}
 	
+	duk_ret_t apiButtonPressed(duk_context* ctx) {
+		auto index = duk_to_int(ctx, -1);
+		if(index <0 || index >=12 ||!input::isButtonPressed(index)) {
+			duk_push_boolean(ctx, false);
+		} else {
+			duk_push_boolean(ctx, true);
+		}
+		return 1;
+	}
+	
+	duk_ret_t apiButtonReleased(duk_context* ctx) {
+		auto index = duk_to_int(ctx, -1);
+		if(index <0 || index >=12 ||!input::isButtonReleased(index)) {
+			duk_push_boolean(ctx, false);
+		} else {
+			duk_push_boolean(ctx, true);
+		}
+		return 1;
+	}
+	
 	const duk_function_list_entry cougarApi[] = {
 		{"loadTrack", apiLoadTrack, 2},
 		{"playTrack", apiPlayTrack, 2},
@@ -126,6 +147,8 @@ namespace script {
 		{"resolution", apiSetResolution, 2},
 		{"clear", apiClearScreen, 1},
 		{"sprite", apiDrawSprite, 5},
+		{"buttonPressed", apiButtonPressed, 1},
+		{"buttonReleased", apiButtonReleased, 1},
 		{nullptr, nullptr, 0}
 	};
 	

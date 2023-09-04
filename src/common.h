@@ -1,6 +1,7 @@
 #pragma once
 
 typedef void (*set_resolution_t)(int w, int h);
+constexpr int buttonMapping[12] = {6, 8, 4, 5, 0, 1, 2, 3, 7, 9, 10, 11};
 
 constexpr auto fps = 30;
 constexpr auto audioSampleRate = 22050;
