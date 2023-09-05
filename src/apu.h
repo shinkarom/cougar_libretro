@@ -12,9 +12,15 @@ namespace apu {
 	
 	void loadFile(int playerNum, const char* fileName);
 	void setVolume(int playerNum, int value);
-	void play(int playerNum);
-	void stop(int playerNum);
-	int32_t tell(int playerNum);
-	void seek(int playerNum, int32_t pos);
+	bool isPlaying(int playerNum);
+	void setPlaying(int playerNum, bool value);
+	int32_t getPosition(int playerNum);
+	void setPosition(int playerNum, int32_t value);
 	int32_t trackLength(int playerNum);
+	int64_t getLoopStart(int playerNum);
+	int64_t getLoopEnd(int playerNum);
+	void setLoopStart(int playerNum, int64_t value);
+	void setLoopEnd(int playerNum, int64_t value);
+	bool isLooping(int playerNum);
+	void setLooping(int playerNum, bool value);
 }

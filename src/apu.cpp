@@ -89,32 +89,18 @@ namespace apu {
 		players[playerNum].setVolume(value);
 	}
 	
-	void play(int playerNum) { 
-		if(playerNum<0 || playerNum>=maxPlayers) {
-			return;
-		}
-		players[playerNum].start();
-	}
-	
-	void stop(int playerNum) {
-		if(playerNum<0 || playerNum>=maxPlayers) {
-			return;
-		}
-		players[playerNum].stop();
-	}
-	
-	int32_t tell(int playerNum) {
+	int32_t getPosition(int playerNum) {
 		if(playerNum<0 || playerNum>=maxPlayers) {
 			return -1;
 		}
-		return players[playerNum].tell();
+		return players[playerNum].getPosition();
 	}
 	
-	void seek(int playerNum, int32_t pos) {
+	void setPosition(int playerNum, int32_t value) {
 		if(playerNum<0 || playerNum>=maxPlayers) {
 			return;
 		}
-		players[playerNum].seek(pos);
+		players[playerNum].setPosition(value);
 	}
 	
 	int32_t trackLength(int playerNum) {
@@ -122,6 +108,62 @@ namespace apu {
 			return -1;
 		}
 		return players[playerNum].getLength();
+	}
+	
+	int64_t getLoopStart(int playerNum) {
+		if(playerNum<0 || playerNum>=maxPlayers) {
+			return -1;
+		}
+		return players[playerNum].getLoopStart();
+	}
+	
+	int64_t getLoopEnd(int playerNum) {
+	if(playerNum<0 || playerNum>=maxPlayers) {
+			return -1;
+		}
+		return players[playerNum].getLoopEnd();
+	}
+	
+	void setLoopStart(int playerNum, int64_t value) {
+		if(playerNum<0 || playerNum>=maxPlayers) {
+			return;
+		}
+		players[playerNum].setLoopStart(value);
+	}
+	
+	void setLoopEnd(int playerNum, int64_t value) {
+		if(playerNum<0 || playerNum>=maxPlayers) {
+			return;
+		}
+		players[playerNum].setLoopEnd(value);
+	}
+	
+	bool isLooping(int playerNum) {
+		if(playerNum<0 || playerNum>=maxPlayers) {
+			return -1;
+		}
+		return players[playerNum].isLooping();
+	}
+	
+	void setLooping(int playerNum, bool value) {
+		if(playerNum<0 || playerNum>=maxPlayers) {
+			return;
+		}
+		players[playerNum].setLooping(value);
+	}
+	
+	bool isPlaying(int playerNum) {
+		if(playerNum<0 || playerNum>=maxPlayers) {
+			return false;
+		}
+		return players[playerNum].isPlaying();
+	}
+	
+	void setPlaying(int playerNum, bool value) {
+		if(playerNum<0 || playerNum>=maxPlayers) {
+			return;
+		}
+		players[playerNum].setPlaying(value);
 	}
 	
 }

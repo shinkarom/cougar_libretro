@@ -30,6 +30,9 @@ bool Player::process() {
 	if(!playing) {
 		return false;
 	} else {
+		if(looping && (pos < loopStart || pos >= loopEnd)) {
+			pos = loopStart;
+		}
 		auto finalPos = looping ? loopEnd : trackLength;
 		auto remaining = finalPos - pos;
 		auto samplesNow = remaining < samplesPerTick ? remaining : samplesPerTick;
@@ -39,9 +42,7 @@ bool Player::process() {
 			pos++;
 		}
 		if(samplesNow < samplesPerTick) {
-			if(looping) {
-				pos = loopStart;
-			} else {
+			if(!looping) {
 				playing = false;
 				pos = 0;
 			}
@@ -50,11 +51,13 @@ bool Player::process() {
 	return true;
 }
 
-void Player::seek(int position) {
-	pos = position;
+void Player::setPosition(int value) {
+	if(value >=0 && value <= trackLength) {
+		pos = value;
+	}
 }
 
-int Player::tell() {
+int64_t Player::getPosition() {
 	return pos;
 }
 
@@ -98,29 +101,43 @@ int64_t Player::getLoopEnd() {
 }
 
 void Player::setLoopStart(int64_t value) {
-	if(value >= 0 && value < loopEnd) {
+	if(value <= loopEnd) {
 		loopStart = value;
+		if(loopStart < 0) {
+			loopStart = 0;
+		}
+		if(playing && looping && (pos < value)) {
+			pos = value;
+		}
 	}
 }
 
 void Player::setLoopEnd(int64_t value) {
-	if(value <= trackLength && value > loopStart) {
+	if(value > loopStart) {
 		loopEnd = value;
+		if(loopEnd > trackLength) {
+			loopEnd = trackLength;
+		}
+		if(playing && looping && (pos > value)) {
+			pos = loopStart;
+		}
 	}
 }
 
-bool Player::getLooping() {
+bool Player::isLooping() {
 	return looping;
 }
 
 void Player::setLooping(bool value) {
-	looping = true;
+	looping = value;
+	if(playing && ((pos < loopStart) || (pos > loopEnd))) {
+		pos = loopStart;
+	}
 }
 
-void Player::start() {
-	playing = true;
-}
-
-void Player::stop() {
-	playing = false;
+void Player::setPlaying(bool value) {
+	playing = value;
+	if(playing && looping && ((pos < loopStart) || (pos > loopEnd))) {
+		pos = loopStart;
+	}
 }

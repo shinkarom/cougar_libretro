@@ -12,10 +12,11 @@ class Player {
 		void loadTrack(int16_t* tr, int length);
 		void unloadTrack();
 		bool process();
-		void seek(int position);
-		int tell();
+		void setPosition(int value);
+		int64_t getPosition();
 		bool isActive();
 		bool isPlaying();
+		void setPlaying(bool value);
 		int16_t* getBuffer();
 		void setVolume(int value);
 		int64_t getLength();
@@ -23,10 +24,8 @@ class Player {
 		int64_t getLoopEnd();
 		void setLoopStart(int64_t value);
 		void setLoopEnd(int64_t value);
-		bool getLooping();
+		bool isLooping();
 		void setLooping(bool value);
-		void start();
-		void stop();
 		
 	private:
 		int pos;

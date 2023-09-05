@@ -72,7 +72,7 @@ namespace script {
 		const char* fileName = duk_get_string(ctx, -1);
 		auto playerNum = duk_get_int(ctx, -2);
 		apu::loadFile(playerNum, fileName);
-		apu::play(playerNum);
+		apu::setPlaying(playerNum, true);
 		return 0;
 	}
 	
@@ -83,15 +83,17 @@ namespace script {
 		return 0;
 	}
 	
-	duk_ret_t apiPlay(duk_context* ctx) {
-		auto playerNum = duk_get_int(ctx, -2);
-		apu::play(playerNum);
-		return 0;
+	duk_ret_t apiIsPlaying(duk_context* ctx) {
+		auto playerNum = duk_get_int(ctx, -1);
+		auto t = apu::isPlaying(playerNum);
+		duk_push_boolean(ctx, t);
+		return 1;
 	}
 	
-	duk_ret_t apiStop(duk_context* ctx) {
+	duk_ret_t apiSetPlaying(duk_context* ctx) {
 		auto playerNum = duk_get_int(ctx, -2);
-		apu::stop(playerNum);
+		auto value = duk_get_boolean(ctx, -1);
+		apu::setPlaying(playerNum, value);
 		return 0;
 	}
 	
@@ -138,16 +140,16 @@ namespace script {
 		return 1;
 	}
 	
-	duk_ret_t apiSeek(duk_context* ctx) {
+	duk_ret_t apiSetTrackPosition(duk_context* ctx) {
 		auto playerNum = duk_to_int(ctx, -2);
-		auto pos = duk_to_int(ctx, -1);
-		apu::seek(playerNum, pos);
+		auto value = duk_to_int(ctx, -1);
+		apu::setPosition(playerNum, value);
 		return 0;
 	}
 	
-	duk_ret_t apiTell(duk_context* ctx) {
+	duk_ret_t apiGetTrackPosition(duk_context* ctx) {
 		auto playerNum = duk_to_int(ctx, -1);
-		auto t = apu::tell(playerNum);
+		auto t = apu::getPosition(playerNum);
 		duk_push_int(ctx, t);
 		return 1;
 	}
@@ -159,20 +161,68 @@ namespace script {
 		return 1;
 	}
 	
+	duk_ret_t apiIsLooping(duk_context* ctx) {
+		auto playerNum = duk_to_int(ctx, -1);
+		auto t = apu::isLooping(playerNum);
+		duk_push_boolean(ctx, t);
+		return 1;
+	}
+	
+	duk_ret_t apiGetLoopStart(duk_context* ctx) {
+		auto playerNum = duk_to_int(ctx, -1);
+		auto t = apu::getLoopStart(playerNum);
+		duk_push_int(ctx, t);
+		return 1;
+	}
+	
+	duk_ret_t apiGetLoopEnd(duk_context* ctx) {
+		auto playerNum = duk_to_int(ctx, -1);
+		auto t = apu::getLoopEnd(playerNum);
+		duk_push_int(ctx, t);
+		return 1;
+	}
+	
+	duk_ret_t apiSetLooping(duk_context* ctx) {
+		auto playerNum = duk_to_int(ctx, -2);
+		auto value = duk_to_boolean(ctx, -1);
+		apu::setLooping(playerNum, value);
+		return 0;
+	}
+	
+	duk_ret_t apiSetLoopStart(duk_context* ctx) {
+		auto playerNum = duk_to_int(ctx, -2);
+		auto value = duk_to_int32(ctx, -1);
+		apu::setLoopStart(playerNum, value);
+		return 0;
+	}
+	
+	duk_ret_t apiSetLoopEnd(duk_context* ctx) {
+		auto playerNum = duk_to_int(ctx, -2);
+		auto value = duk_to_int32(ctx, -1);
+		apu::setLoopEnd(playerNum, value);
+		return 0;
+	}
+	
 	const duk_function_list_entry cougarApi[] = {
 		{"loadTrack", apiLoadTrack, 2},
 		{"playTrack", apiPlayTrack, 2},
 		{"volume", apiSetVolume, 2},
-		{"play", apiPlay, 1},
-		{"stop", apiStop, 1},
+		{"isPlaying", apiIsPlaying, 1},
+		{"setPlaying", apiSetPlaying, 2},
 		{"resolution", apiSetResolution, 2},
 		{"clear", apiClearScreen, 1},
 		{"sprite", apiDrawSprite, 5},
 		{"buttonPressed", apiButtonPressed, 1},
 		{"buttonReleased", apiButtonReleased, 1},
-		{"tell", apiTell, 1},
-		{"seek", apiSeek, 2},
+		{"getTrackPosition", apiGetTrackPosition, 1},
+		{"setTrackPosition", apiSetTrackPosition, 2},
 		{"trackLength", apiTrackLength, 1},
+		{"isLooping", apiIsLooping, 1},
+		{"setLooping", apiSetLooping, 2},
+		{"getLoopStart", apiGetLoopStart, 1},
+		{"setLoopStart", apiSetLoopStart, 2},
+		{"getLoopEnd", apiGetLoopEnd, 1},
+		{"setLoopEnd", apiSetLoopEnd, 2},		
 		{nullptr, nullptr, 0}
 	};
 	
