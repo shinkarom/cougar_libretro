@@ -82,6 +82,13 @@ namespace apu {
 		
 	}
 
+	int getVolume(int playerNum) {
+		if(playerNum<0 || playerNum>=maxPlayers) {
+			return 0;
+		}
+		return players[playerNum].getVolume();
+	}
+
 	void setVolume(int playerNum, int value) {
 		if(playerNum<0 || playerNum>=maxPlayers) {
 			return;
@@ -164,6 +171,20 @@ namespace apu {
 			return;
 		}
 		players[playerNum].setPlaying(value);
+	}
+	
+	int getPan(int playerNum) {
+		if(playerNum<0 || playerNum>=maxPlayers) {
+			return 0;
+		}
+		return players[playerNum].getPan();
+	}
+	
+	void setPan(int playerNum, int value) {
+		if(playerNum<0 || playerNum>=maxPlayers) {
+			return;
+		}
+		players[playerNum].setPan(value);
 	}
 	
 }

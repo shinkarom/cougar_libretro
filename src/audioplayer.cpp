@@ -8,12 +8,14 @@
 Player::Player() {
 	active = false;
 	playing = false;
-	volume = 100;
+	volume = 10;
+	pan = 0;
 }
 
 Player::~Player() {
 	
 }
+
 void Player::loadTrack(int16_t* tr, int length) {
 	track = tr;
 	trackLength = length;
@@ -37,8 +39,8 @@ bool Player::process() {
 		auto remaining = finalPos - pos;
 		auto samplesNow = remaining < samplesPerTick ? remaining : samplesPerTick;
 		for(int i = 0; i<samplesNow; i++) {
-			buffer[i*2] = track[pos] / 100*volume;
-			buffer[i*2+1] = track[pos]/ 100*volume;
+			buffer[i*2] = track[pos] / 10*volume*(10-pan)/20;
+			buffer[i*2+1] = track[pos]/ 10*volume*(pan+10)/20;
 			pos++;
 		}
 		if(samplesNow < samplesPerTick) {
@@ -73,8 +75,12 @@ int16_t* Player::getBuffer() {
 	return buffer;
 }
 
+int Player::getVolume() {
+	return volume;
+}
+
 void Player::setVolume(int value) {
-	if(value <0 || value > 100) {
+	if(value <0 || value > 10) {
 		return;
 	}
 	volume = value;
@@ -140,4 +146,14 @@ void Player::setPlaying(bool value) {
 	if(playing && looping && ((pos < loopStart) || (pos > loopEnd))) {
 		pos = loopStart;
 	}
+}
+
+int Player::getPan() {
+	return pan;
+}
+
+void Player::setPan(int value) {
+if(value >= -10 && value <= 10) {
+	pan = value;
+}
 }

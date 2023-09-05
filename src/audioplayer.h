@@ -18,6 +18,7 @@ class Player {
 		bool isPlaying();
 		void setPlaying(bool value);
 		int16_t* getBuffer();
+		int getVolume();
 		void setVolume(int value);
 		int64_t getLength();
 		int64_t getLoopStart();
@@ -26,10 +27,13 @@ class Player {
 		void setLoopEnd(int64_t value);
 		bool isLooping();
 		void setLooping(bool value);
+		int getPan();
+		void setPan(int value);
 		
 	private:
 		int pos;
 		int volume;
+		int pan;
 		bool looping;
 		int64_t loopStart;
 		int64_t loopEnd;

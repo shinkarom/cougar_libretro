@@ -76,6 +76,13 @@ namespace script {
 		return 0;
 	}
 	
+	duk_ret_t apiGetVolume(duk_context* ctx) {
+		auto playerNum = duk_get_int(ctx, -1);
+		int t = apu::getVolume(playerNum);
+		duk_push_int(ctx, t);
+		return 1;
+	}
+	
 	duk_ret_t apiSetVolume(duk_context* ctx) {
 		auto value = duk_get_int(ctx, -1);
 		auto playerNum = duk_get_int(ctx, -2);
@@ -203,10 +210,25 @@ namespace script {
 		return 0;
 	}
 	
+	duk_ret_t apiGetPan(duk_context* ctx) {
+		auto playerNum = duk_get_int(ctx, -1);
+		int t = apu::getPan(playerNum);
+		duk_push_int(ctx, t);
+		return 1;
+	}
+	
+	duk_ret_t apiSetPan(duk_context* ctx) {
+		auto value = duk_get_int(ctx, -1);
+		auto playerNum = duk_get_int(ctx, -2);
+		apu::setPan(playerNum, value);
+		return 0;
+	}
+	
 	const duk_function_list_entry cougarApi[] = {
 		{"loadTrack", apiLoadTrack, 2},
 		{"playTrack", apiPlayTrack, 2},
-		{"volume", apiSetVolume, 2},
+		{"getVolume", apiGetVolume, 1},
+		{"setVolume", apiSetVolume, 2},
 		{"isPlaying", apiIsPlaying, 1},
 		{"setPlaying", apiSetPlaying, 2},
 		{"resolution", apiSetResolution, 2},
@@ -222,7 +244,9 @@ namespace script {
 		{"getLoopStart", apiGetLoopStart, 1},
 		{"setLoopStart", apiSetLoopStart, 2},
 		{"getLoopEnd", apiGetLoopEnd, 1},
-		{"setLoopEnd", apiSetLoopEnd, 2},		
+		{"setLoopEnd", apiSetLoopEnd, 2},	
+		{"getPan", apiGetPan, 1},
+		{"setPan", apiSetPan, 2},
 		{nullptr, nullptr, 0}
 	};
 	

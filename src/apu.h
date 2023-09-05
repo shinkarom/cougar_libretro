@@ -11,6 +11,7 @@ namespace apu {
 	uint16_t* process();
 	
 	void loadFile(int playerNum, const char* fileName);
+	int getVolume(int playerNum);
 	void setVolume(int playerNum, int value);
 	bool isPlaying(int playerNum);
 	void setPlaying(int playerNum, bool value);
@@ -23,4 +24,6 @@ namespace apu {
 	void setLoopEnd(int playerNum, int64_t value);
 	bool isLooping(int playerNum);
 	void setLooping(int playerNum, bool value);
+	int getPan(int playerNum);
+	void setPan(int playerNum, int value);
 }
