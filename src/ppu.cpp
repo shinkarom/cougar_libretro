@@ -13,7 +13,7 @@ namespace ppu {
 	int windowTotalPixels = windowWidth * windowHeight;
 	
 	uint32_t tiles[totalTilesSizeBytes];
-	tilemap_t tilemaps[numTilemaps];
+	extern uint16_t tilemap[totalTilemapSizeTiles];	
 	
 	set_resolution_t resolution_cb;
 	
@@ -45,9 +45,7 @@ namespace ppu {
 		frameBuf = buffer;
 		resolution_cb = resovalue;
 		
-		for(int i = 0; i < numTilemaps; i++) {
-			memset(tilemaps[i],totalTilemapSizeTiles,0);
-		}
+		memset(tilemap,totalTilemapSizeTiles,0);
 	}
 	
 	void deinit() {
