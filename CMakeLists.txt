@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
 set(LIBNAME cougar_libretro)
+set(CMAKE_CXX_STANDARD 23)
 project(${LIBNAME} LANGUAGES C CXX VERSION 1.0.1 DESCRIPTION "Cougar fantasy console libretro core")
 
 add_library(quickjs STATIC 

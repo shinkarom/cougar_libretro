@@ -28,6 +28,7 @@ static float last_aspect;
 static float last_sample_rate;
 char retro_base_directory[4096];
 char retro_game_path[4096];
+bool firstRun;
 
 static retro_video_refresh_t video_cb;
 static retro_audio_sample_t audio_cb;
@@ -69,7 +70,9 @@ void retro_init(void)
    frameBuf = new uint32_t[maxScreenTotalPixels];
    memset(frameBuf,0,maxScreenTotalPixels*4);
    
-   fs::init();
+   firstRun = true;
+   
+	fs::init();
 	script::init();
 	input::init();
 	ppu::init(&frameBuf, &setResolution);
@@ -230,13 +233,22 @@ void retro_run(void)
 {
    update_input();
 	
-	if(!script::callVBlank()) {
-		environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, nullptr);
+	if(firstRun) {
+		if(!script::callInit()) {
+			environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, nullptr);
+			return;
+		}
+		firstRun = false;
+	} else {
+		if(!script::callVBlank()) {
+			environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, nullptr);
+		}	
+		
+		ppu::process();
+	
+		video_cb(frameBuf, screenWidth, screenHeight, screenWidth*sizeof(uint32_t));
 	}
 	
-	ppu::process();
-	
-	video_cb(frameBuf, screenWidth, screenHeight, screenWidth*sizeof(uint32_t));
 
    bool updated = false;
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
@@ -282,10 +294,6 @@ bool retro_load_game(const struct retro_game_info *info)
 	}
    
    script::addApi();
-   
-   if(!script::callInit()) {
-		return false;
-	}
    
    ppu::loadTiles();
    

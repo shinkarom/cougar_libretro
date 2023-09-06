@@ -31,6 +31,7 @@ namespace script {
 			std::cout<<"[COUGAR] "<<duk_safe_to_stacktrace(ctx, -1)<<std::endl;
 			return false;
 		}
+		
 		delete[] prgFile;
 		return true;
 	}
