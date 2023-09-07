@@ -13,7 +13,7 @@ namespace ppu {
 	int windowTotalPixels = windowWidth * windowHeight;
 	
 	uint32_t tiles[totalTilesSizeBytes];
-	extern uint16_t tilemap[totalTilemapSizeTiles];	
+	uint16_t tilemap[tilemapSizeTiles];	
 	
 	set_resolution_t resolution_cb;
 	
@@ -45,7 +45,7 @@ namespace ppu {
 		frameBuf = buffer;
 		resolution_cb = resovalue;
 		
-		memset(tilemap,totalTilemapSizeTiles,0);
+		memset(tilemap,tilemapSizeTiles,0);
 	}
 	
 	void deinit() {
@@ -79,7 +79,9 @@ namespace ppu {
 				int xFactor = fliph ? tileWidth - xx - 1 : xx;
 				int yFactor = flipv ? tileHeight - yy - 1 : yy;
 				int tileStart = index * tileSizePixels +yFactor*tileWidth+xFactor;
-				(*frameBuf)[pixelIndex] = tiles[tileStart];
+				if(tiles[tileStart] & 0xFF000000) {
+					(*frameBuf)[pixelIndex] = tiles[tileStart];
+				}	
 			}
 		}
 		
@@ -88,6 +90,72 @@ namespace ppu {
 	void clearScreen(int32_t color) {
 		for(int i = 0; i<windowTotalPixels; i++) {
 			(*frameBuf)[i] = color;
+		}
+	}
+	
+	uint16_t getTilemapTile(int w, int h) {
+		if(w<0 || w>= tilemapWidthTiles || h<0 || h>=tilemapHeightTiles) {
+			return 0;
+		}
+		auto index = h*tilemapWidthTiles + w;
+		return tilemap[index];
+	}
+	
+	void setTilemapTile(int w, int h, uint16_t value) {
+		if(w<0 || w>= tilemapWidthTiles || h<0 || h>=tilemapHeightTiles) {
+			return;
+		}
+		auto index = h*tilemapWidthTiles + w;
+		tilemap[index] = value;
+	}
+	
+	void drawTilemap(int sx, int sy, int x, int y, int w, int h) {
+		if(sx < 0 || sx >= tilemapWidthTiles || sy <0 || sy >= tilemapHeightTiles) {
+			return;
+		}
+		//if(x < 0 || x >= windowWidth || y < 0 || y>= windowHeight) {
+		//	return;
+		//}
+		//if(w < 0 || w >= windowWidth || h < 0 || h >= windowHeight) {
+		//	return;
+		//}
+		for(int wi = 0; wi < w; wi++) {
+			auto screenX = x+wi;
+			if(screenX < 0) {
+				continue;
+			} else if(screenX >= windowWidth) {
+				break;
+			}
+			
+			auto tilemapX = (sx + wi) % tilemapWidthPixels;
+			auto tileX = tilemapX / tileWidth;
+			auto offsetX = tilemapX % tileWidth;
+			
+			for(int hi = 0; hi < h; hi++) {
+				auto screenY = y+hi;
+				if(screenY < 0) {
+					continue;
+				} else if(screenY >= windowHeight) {
+					break;
+				}
+				
+				auto tilemapY = (sy + hi) % tilemapHeightPixels;
+				auto tileY = tilemapY / tileHeight;
+				auto offsetY = tilemapY % tileHeight;
+				
+				auto pixelPos = screenY * windowWidth + screenX;
+				
+				auto tilemapIndex = tileY * tilemapWidthTiles + tileX;
+				auto tileIndex = tilemap[tilemapIndex];
+				
+				auto offsetIndex = offsetY * tileWidth + offsetX;
+				auto pixelIndex = tileIndex * tileSizePixels + offsetIndex;
+				uint32_t pixel = tiles[pixelIndex];
+				// draw it
+				if(pixel & 0xFF000000) {
+					(*frameBuf)[pixelPos] = pixel;
+				}
+			}
 		}
 	}
 	

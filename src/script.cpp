@@ -61,75 +61,73 @@ namespace script {
 	}
 	
 	duk_ret_t apiLoadTrack(duk_context *ctx) {
-		//ensure 2 arguments via duk_get_top
-		const char* fileName = duk_get_string(ctx, -1);
-		auto playerNum = duk_get_int(ctx, -2);
+		auto playerNum = duk_require_int(ctx, -2);
+		const char* fileName = duk_require_string(ctx, -1);
 		apu::loadFile(playerNum, fileName);
 		return 0;
 	}
 	
 	duk_ret_t apiPlayTrack(duk_context *ctx) {
-		//ensure 2 arguments via duk_get_top
-		const char* fileName = duk_get_string(ctx, -1);
-		auto playerNum = duk_get_int(ctx, -2);
+		auto playerNum = duk_require_int(ctx, -2);
+		const char* fileName = duk_require_string(ctx, -1);
 		apu::loadFile(playerNum, fileName);
 		apu::setPlaying(playerNum, true);
 		return 0;
 	}
 	
 	duk_ret_t apiGetVolume(duk_context* ctx) {
-		auto playerNum = duk_get_int(ctx, -1);
+		auto playerNum = duk_require_int(ctx, -1);
 		int t = apu::getVolume(playerNum);
 		duk_push_int(ctx, t);
 		return 1;
 	}
 	
 	duk_ret_t apiSetVolume(duk_context* ctx) {
-		auto value = duk_get_int(ctx, -1);
-		auto playerNum = duk_get_int(ctx, -2);
+		auto playerNum = duk_require_int(ctx, -2);
+		auto value = duk_require_int(ctx, -1);
 		apu::setVolume(playerNum, value);
 		return 0;
 	}
 	
 	duk_ret_t apiIsPlaying(duk_context* ctx) {
-		auto playerNum = duk_get_int(ctx, -1);
+		auto playerNum = duk_require_int(ctx, -1);
 		auto t = apu::isPlaying(playerNum);
 		duk_push_boolean(ctx, t);
 		return 1;
 	}
 	
 	duk_ret_t apiSetPlaying(duk_context* ctx) {
-		auto playerNum = duk_get_int(ctx, -2);
-		auto value = duk_get_boolean(ctx, -1);
+		auto playerNum = duk_require_int(ctx, -2);
+		auto value = duk_require_boolean(ctx, -1);
 		apu::setPlaying(playerNum, value);
 		return 0;
 	}
 	
 	duk_ret_t apiSetResolution(duk_context* ctx) {
-		auto h = duk_get_int(ctx, -1);
-		auto w = duk_get_int(ctx, -2);
+		auto w = duk_require_int(ctx, -2);
+		auto h = duk_require_int(ctx, -1);
 		ppu::setResolution(w, h);
 		return 0;
 	}
 	
 	duk_ret_t apiClearScreen(duk_context* ctx) {
-		auto color = duk_to_uint32(ctx, -1);
+		auto color = (uint32_t)duk_require_number(ctx, -1);
 		ppu::clearScreen(color);
 		return 0;
 	}
 	
 	duk_ret_t apiDrawSprite(duk_context* ctx) {
-		auto index = duk_to_uint32(ctx, -5);
-		auto x = duk_to_int(ctx, -4);
-		auto y = duk_to_int(ctx, -3);
-		auto fliph = duk_to_boolean(ctx, -2);
-		auto flipv = duk_to_boolean(ctx, -1);
+		auto index = (uint32_t)duk_require_number(ctx, -5);
+		auto x = duk_require_int(ctx, -4);
+		auto y = duk_require_int(ctx, -3);
+		auto fliph = duk_require_boolean(ctx, -2);
+		auto flipv = duk_require_boolean(ctx, -1);
 		ppu::drawSprite(index, x, y, fliph, flipv);
 		return 0;
 	}
 	
 	duk_ret_t apiButtonPressed(duk_context* ctx) {
-		auto index = duk_to_int(ctx, -1);
+		auto index = duk_require_int(ctx, -1);
 		if(index <0 || index >=12 ||!input::isButtonPressed(index)) {
 			duk_push_boolean(ctx, false);
 		} else {
@@ -139,7 +137,7 @@ namespace script {
 	}
 	
 	duk_ret_t apiButtonReleased(duk_context* ctx) {
-		auto index = duk_to_int(ctx, -1);
+		auto index = duk_require_int(ctx, -1);
 		if(index <0 || index >=12 ||!input::isButtonReleased(index)) {
 			duk_push_boolean(ctx, false);
 		} else {
@@ -149,79 +147,106 @@ namespace script {
 	}
 	
 	duk_ret_t apiSetTrackPosition(duk_context* ctx) {
-		auto playerNum = duk_to_int(ctx, -2);
-		auto value = duk_to_int(ctx, -1);
+		auto playerNum = duk_require_int(ctx, -2);
+		auto value = duk_require_int(ctx, -1);
 		apu::setPosition(playerNum, value);
 		return 0;
 	}
 	
 	duk_ret_t apiGetTrackPosition(duk_context* ctx) {
-		auto playerNum = duk_to_int(ctx, -1);
+		auto playerNum = duk_require_int(ctx, -1);
 		auto t = apu::getPosition(playerNum);
 		duk_push_int(ctx, t);
 		return 1;
 	}
 	
 	duk_ret_t apiTrackLength(duk_context*ctx) {
-		auto playerNum = duk_to_int(ctx, -1);
+		auto playerNum = duk_require_int(ctx, -1);
 		auto l = apu::trackLength(playerNum);
 		duk_push_int(ctx, l);
 		return 1;
 	}
 	
 	duk_ret_t apiIsLooping(duk_context* ctx) {
-		auto playerNum = duk_to_int(ctx, -1);
+		auto playerNum = duk_require_int(ctx, -1);
 		auto t = apu::isLooping(playerNum);
 		duk_push_boolean(ctx, t);
 		return 1;
 	}
 	
 	duk_ret_t apiGetLoopStart(duk_context* ctx) {
-		auto playerNum = duk_to_int(ctx, -1);
+		auto playerNum = duk_require_int(ctx, -1);
 		auto t = apu::getLoopStart(playerNum);
 		duk_push_int(ctx, t);
 		return 1;
 	}
 	
 	duk_ret_t apiGetLoopEnd(duk_context* ctx) {
-		auto playerNum = duk_to_int(ctx, -1);
+		auto playerNum = duk_require_int(ctx, -1);
 		auto t = apu::getLoopEnd(playerNum);
 		duk_push_int(ctx, t);
 		return 1;
 	}
 	
 	duk_ret_t apiSetLooping(duk_context* ctx) {
-		auto playerNum = duk_to_int(ctx, -2);
+		auto playerNum = duk_require_int(ctx, -2);
 		auto value = duk_to_boolean(ctx, -1);
 		apu::setLooping(playerNum, value);
 		return 0;
 	}
 	
 	duk_ret_t apiSetLoopStart(duk_context* ctx) {
-		auto playerNum = duk_to_int(ctx, -2);
-		auto value = duk_to_int32(ctx, -1);
+		auto playerNum = duk_require_int(ctx, -2);
+		auto value = (uint32_t)duk_require_number(ctx, -1);
 		apu::setLoopStart(playerNum, value);
 		return 0;
 	}
 	
 	duk_ret_t apiSetLoopEnd(duk_context* ctx) {
-		auto playerNum = duk_to_int(ctx, -2);
-		auto value = duk_to_int32(ctx, -1);
+		auto playerNum = duk_require_int(ctx, -2);
+		auto value = (uint32_t)duk_require_number(ctx, -1);
 		apu::setLoopEnd(playerNum, value);
 		return 0;
 	}
 	
 	duk_ret_t apiGetPan(duk_context* ctx) {
-		auto playerNum = duk_get_int(ctx, -1);
+		auto playerNum = duk_require_int(ctx, -1);
 		int t = apu::getPan(playerNum);
 		duk_push_int(ctx, t);
 		return 1;
 	}
 	
 	duk_ret_t apiSetPan(duk_context* ctx) {
-		auto value = duk_get_int(ctx, -1);
-		auto playerNum = duk_get_int(ctx, -2);
+		auto value = duk_require_int(ctx, -1);
+		auto playerNum = duk_require_int(ctx, -2);
 		apu::setPan(playerNum, value);
+		return 0;
+	}
+	
+	duk_ret_t apiGetTilemapTile(duk_context* ctx) {
+		auto w = duk_require_int(ctx, -2);
+		auto h = duk_require_int(ctx, -1);
+		auto t = ppu::getTilemapTile(w, h);
+		duk_push_int(ctx, t);
+		return 1;
+	}
+	
+	duk_ret_t apiSetTilemapTile(duk_context* ctx) {
+		auto w = duk_require_int(ctx, -3);
+		auto h = duk_require_int(ctx, -2);
+		auto value = duk_require_int(ctx, -1);
+		ppu::setTilemapTile(w, h, value);
+		return 0;
+	}
+	
+	duk_ret_t apiDrawTilemap(duk_context* ctx) {
+		auto sx = duk_require_int(ctx, -6);
+		auto sy = duk_require_int(ctx, -5);
+		auto x = duk_require_int(ctx, -4);
+		auto y = duk_require_int(ctx, -3);
+		auto w = duk_require_int(ctx, -2);
+		auto h = duk_require_int(ctx, -1);
+		ppu::drawTilemap(sx, sy, x, y, w, h);
 		return 0;
 	}
 	
@@ -248,6 +273,9 @@ namespace script {
 		{"setLoopEnd", apiSetLoopEnd, 2},	
 		{"getPan", apiGetPan, 1},
 		{"setPan", apiSetPan, 2},
+		{"getTilemapTile", apiGetTilemapTile, 2},
+		{"setTilemapTile", apiSetTilemapTile, 3},
+		{"drawTilemap", apiDrawTilemap, 6},
 		{nullptr, nullptr, 0}
 	};
 	
