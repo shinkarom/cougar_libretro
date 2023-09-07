@@ -3,6 +3,7 @@ namespace script {
 	constexpr const char* vblankName = "_LOOP";
 	constexpr const char* initName = "_INIT";
 	
+	constexpr const char* mainObjectName = "_MAIN";
 	constexpr const char* globalObjectName = "_SYS";
 	
 	void init();

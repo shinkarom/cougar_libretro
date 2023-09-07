@@ -31,6 +31,28 @@ namespace script {
 			std::cout<<"[COUGAR] "<<duk_safe_to_stacktrace(ctx, -1)<<std::endl;
 			return false;
 		}
+		duk_push_global_object(ctx);
+		duk_get_prop_string(ctx, -1, mainObjectName);
+		if(duk_is_undefined(ctx, -1)) {
+			std::cout<<"[COUGAR] No object "<<mainObjectName<<std::endl;
+			delete[] prgFile;
+			return false;
+		};
+		duk_get_prop_string(ctx, -1, initName);
+		if(duk_is_undefined(ctx, -1) || !duk_is_callable(ctx, -1)) {
+			std::cout<<"[COUGAR] No function "<<initName<<std::endl;
+			delete[] prgFile;
+			return false;
+		}
+		duk_pop(ctx);
+		duk_get_prop_string(ctx, -1, vblankName);
+		if(duk_is_undefined(ctx, -1) || !duk_is_callable(ctx, -1)) {
+			std::cout<<"[COUGAR] No function "<<vblankName<<std::endl;
+			delete[] prgFile;
+			return false;
+		}
+		duk_pop(ctx);
+		duk_pop(ctx);
 		
 		delete[] prgFile;
 		return true;
@@ -38,25 +60,25 @@ namespace script {
 	
 	bool callInit() {
 		duk_push_global_object(ctx);
+		duk_get_prop_string(ctx, -1, mainObjectName);
 		duk_get_prop_string(ctx, -1, initName);
 		if(duk_is_callable(ctx, -1) && duk_pcall(ctx, 0)){
 			std::cout<<"[COUGAR] "<<duk_safe_to_stacktrace(ctx, -1)<<std::endl;
 			return false;
 		}
-		duk_pop(ctx);
-		duk_pop(ctx);
+		duk_pop_3(ctx);
 		return true;
 	}
 	
 	bool callVBlank() {
 		duk_push_global_object(ctx);
+		duk_get_prop_string(ctx, -1, mainObjectName);
 		duk_get_prop_string(ctx, -1, vblankName);
 		if(duk_is_callable(ctx, -1) && duk_pcall(ctx, 0)){
 			std::cout<<"[COUGAR] "<<duk_safe_to_stacktrace(ctx, -1)<<std::endl;
 			return false;
 		}
-		duk_pop(ctx);
-		duk_pop(ctx);
+		duk_pop_2(ctx);
 		return true;
 	}
 	
@@ -122,6 +144,7 @@ namespace script {
 		auto y = duk_require_int(ctx, -3);
 		auto fliph = duk_require_boolean(ctx, -2);
 		auto flipv = duk_require_boolean(ctx, -1);
+		std::cout<<index<<" "<<x<<" "<<y<<std::endl;
 		ppu::drawSprite(index, x, y, fliph, flipv);
 		return 0;
 	}
