@@ -10,6 +10,7 @@ add_library(${LIBNAME} SHARED
 	src/miniphysfs.cpp
 	src/duktape/duktape.c
 	src/stb_vorbis.c
+	src/stb_image.c
 	src/fs.cpp
 	src/script.cpp
 	src/input.cpp

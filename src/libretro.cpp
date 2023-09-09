@@ -289,7 +289,7 @@ bool retro_load_game(const struct retro_game_info *info)
 		return false;
 	}
 	
-	if(!script::loadFile("/PRG/PRG.js")) {
+	if(!script::loadFile("/PRG.js")) {
 		return false;
 	}
    

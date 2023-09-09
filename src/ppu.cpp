@@ -5,6 +5,7 @@
 #include <cstring>
 #include <cstdio>
 #include <iostream>
+#include <stb_image.h>
 
 namespace ppu {
 	
@@ -26,7 +27,7 @@ namespace ppu {
 		
 		for(int pageNum = 0; pageNum < numTilePages; pageNum++) {
 			char pageName[80];
-			sprintf(pageName, "/CHR/CHR_%02X", pageNum);
+			sprintf(pageName, "/CHR/CHR_%02X.png", pageNum);
 			auto fileSize = fs::size(pageName);		
 			int loadSize = (fileSize > pageSizeBytes) ? pageSizeBytes : fileSize;
 			
@@ -35,9 +36,47 @@ namespace ppu {
 			char* buffer;
 			auto r = fs::readBinaryFile(pageName, &buffer, true);
 			if (r == -1) continue;
-			std::cout<<"[COUGAR] "<<pageNum<<" "<<r<<std::endl;
-			memcpy(tiles+startPos, buffer, loadSize*sizeof(uint32_t));
-			delete[] buffer;
+			
+			// load the file
+			int x, y, n, ok;
+			ok = stbi_info_from_memory((stbi_uc *)buffer, r, &x, &y, &n);
+			if(x != tilePageWidth && y != tilePageHeight) {
+				std::cout<<"[COUGAR] "<<pageName<<" is not of required dimensions."<<std::endl;
+				delete[] buffer;
+				continue;
+			}
+			
+			auto data = stbi_load_from_memory((stbi_uc *)buffer, r, &x, &y, &n, 4);
+			if(data == nullptr) {
+				delete[] buffer;
+				continue;
+			}
+			
+			std::cout<<"[COUGAR] Will load from "<<pageName<<std::endl;
+			auto pixels = (uint32_t*)data;
+	
+			for(auto pxn = 0; pxn < pageSizePixels; pxn++) {
+				auto px = pixels[pxn];
+				
+				auto baseY = pxn / tilePageWidth;
+				auto baseX = pxn % tilePageWidth;
+				
+				auto tileX = (baseX / tileWidth) % tilesPerRow;
+				auto tileY = (baseY / tileHeight) % tilesRowsPerPage;
+				
+				auto pixelX = baseX % tileWidth;
+				auto pixelY = baseY % tileHeight;
+				
+				auto newTilePos = pixelY * tileWidth + pixelX;
+				auto newTileIndex = tileY * tilesPerPage + tileX;
+				
+				auto new_pxn = newTileIndex * tileSizePixels + newTilePos;
+				
+				tiles[pageSizePixels*pageNum + new_pxn] = px;
+			}
+			
+			delete[] buffer;			
+			free(data);
 		}		
 	}
 	

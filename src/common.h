@@ -3,7 +3,7 @@
 typedef void (*set_resolution_t)(int w, int h);
 constexpr int buttonMapping[12] = {6, 8, 5, 4, 0, 1, 2, 3, 7, 9, 10, 11};
 
-constexpr auto fps = 30;
+constexpr auto fps = 60;
 constexpr auto audioSampleRate = 22050;
 constexpr auto samplesPerTick = audioSampleRate / fps;
 constexpr auto maxPlayers = 4;
@@ -30,7 +30,11 @@ constexpr int tilemapSizeTiles =  tilemapWidthTiles * tilemapHeightTiles;
 constexpr int tilemapSizePixels = tilemapWidthPixels * tilemapHeightPixels;
 
 constexpr int numTilePages = 256;
-constexpr int tilesPerPage = 256;
+constexpr int tilesPerRow = 16;
+constexpr int tilesRowsPerPage = 16; 
+constexpr int tilePageWidth = tilesPerRow * tileWidth;
+constexpr int tilePageHeight = tilesRowsPerPage * tileHeight;
+constexpr int tilesPerPage = tilesPerRow * tilesRowsPerPage;
 constexpr int pageSizePixels = tilesPerPage * tileSizePixels;
 constexpr int pageSizeBytes = pageSizePixels * sizeof(uint32_t);
 
