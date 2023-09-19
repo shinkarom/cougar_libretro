@@ -117,34 +117,6 @@ namespace apu {
 		return players[playerNum].getLength();
 	}
 	
-	int64_t getLoopStart(int playerNum) {
-		if(playerNum<0 || playerNum>=maxPlayers) {
-			return -1;
-		}
-		return players[playerNum].getLoopStart();
-	}
-	
-	int64_t getLoopEnd(int playerNum) {
-	if(playerNum<0 || playerNum>=maxPlayers) {
-			return -1;
-		}
-		return players[playerNum].getLoopEnd();
-	}
-	
-	void setLoopStart(int playerNum, int64_t value) {
-		if(playerNum<0 || playerNum>=maxPlayers) {
-			return;
-		}
-		players[playerNum].setLoopStart(value);
-	}
-	
-	void setLoopEnd(int playerNum, int64_t value) {
-		if(playerNum<0 || playerNum>=maxPlayers) {
-			return;
-		}
-		players[playerNum].setLoopEnd(value);
-	}
-	
 	bool isLooping(int playerNum) {
 		if(playerNum<0 || playerNum>=maxPlayers) {
 			return -1;
@@ -171,20 +143,6 @@ namespace apu {
 			return;
 		}
 		players[playerNum].setPlaying(value);
-	}
-	
-	int getPan(int playerNum) {
-		if(playerNum<0 || playerNum>=maxPlayers) {
-			return 0;
-		}
-		return players[playerNum].getPan();
-	}
-	
-	void setPan(int playerNum, int value) {
-		if(playerNum<0 || playerNum>=maxPlayers) {
-			return;
-		}
-		players[playerNum].setPan(value);
 	}
 	
 }

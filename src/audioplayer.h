@@ -21,22 +21,13 @@ class Player {
 		int getVolume();
 		void setVolume(int value);
 		int64_t getLength();
-		int64_t getLoopStart();
-		int64_t getLoopEnd();
-		void setLoopStart(int64_t value);
-		void setLoopEnd(int64_t value);
 		bool isLooping();
 		void setLooping(bool value);
-		int getPan();
-		void setPan(int value);
 		
 	private:
 		int pos;
 		int volume;
-		int pan;
 		bool looping;
-		int64_t loopStart;
-		int64_t loopEnd;
 		int16_t* track;
 		int64_t trackLength;
 		int16_t buffer[samplesPerTick*2];

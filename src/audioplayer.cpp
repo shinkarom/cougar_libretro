@@ -9,7 +9,6 @@ Player::Player() {
 	active = false;
 	playing = false;
 	volume = 10;
-	pan = 0;
 }
 
 Player::~Player() {
@@ -19,8 +18,6 @@ Player::~Player() {
 void Player::loadTrack(int16_t* tr, int length) {
 	track = tr;
 	trackLength = length;
-	loopStart = 0;
-	loopEnd = trackLength;
 	active = true;
 	playing = false;
 	looping = false;
@@ -32,15 +29,11 @@ bool Player::process() {
 	if(!playing) {
 		return false;
 	} else {
-		if(looping && (pos < loopStart || pos >= loopEnd)) {
-			pos = loopStart;
-		}
-		auto finalPos = looping ? loopEnd : trackLength;
-		auto remaining = finalPos - pos;
+		auto remaining = trackLength - pos;
 		auto samplesNow = remaining < samplesPerTick ? remaining : samplesPerTick;
 		for(int i = 0; i<samplesNow; i++) {
-			buffer[i*2] = track[pos] / 10*volume*(10-pan)/20;
-			buffer[i*2+1] = track[pos]/ 10*volume*(pan+10)/20;
+			buffer[i*2] = track[pos] / 10*volume;
+			buffer[i*2+1] = track[pos]/ 10*volume;
 			pos++;
 		}
 		if(samplesNow < samplesPerTick) {
@@ -98,62 +91,14 @@ int64_t Player::getLength() {
 	return trackLength;
 }
 
-int64_t Player::getLoopStart() {
-	return loopStart;
-}
-
-int64_t Player::getLoopEnd() {
-	return loopEnd;
-}
-
-void Player::setLoopStart(int64_t value) {
-	if(value <= loopEnd) {
-		loopStart = value;
-		if(loopStart < 0) {
-			loopStart = 0;
-		}
-		if(playing && looping && (pos < value)) {
-			pos = value;
-		}
-	}
-}
-
-void Player::setLoopEnd(int64_t value) {
-	if(value > loopStart) {
-		loopEnd = value;
-		if(loopEnd > trackLength) {
-			loopEnd = trackLength;
-		}
-		if(playing && looping && (pos > value)) {
-			pos = loopStart;
-		}
-	}
-}
-
 bool Player::isLooping() {
 	return looping;
 }
 
 void Player::setLooping(bool value) {
 	looping = value;
-	if(playing && ((pos < loopStart) || (pos > loopEnd))) {
-		pos = loopStart;
-	}
 }
 
 void Player::setPlaying(bool value) {
 	playing = value;
-	if(playing && looping && ((pos < loopStart) || (pos > loopEnd))) {
-		pos = loopStart;
-	}
-}
-
-int Player::getPan() {
-	return pan;
-}
-
-void Player::setPan(int value) {
-if(value >= -10 && value <= 10) {
-	pan = value;
-}
 }
