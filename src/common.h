@@ -4,7 +4,7 @@ typedef void (*set_resolution_t)(int w, int h);
 constexpr int buttonMapping[12] = {6, 8, 5, 4, 0, 1, 2, 3, 7, 9, 10, 11};
 
 constexpr auto fps = 60;
-constexpr auto audioSampleRate = 22050;
+constexpr auto audioSampleRate = 16000;
 constexpr auto samplesPerTick = audioSampleRate / fps;
 constexpr auto maxPlayers = 4;
 	

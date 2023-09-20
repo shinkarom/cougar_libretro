@@ -1,0 +1,24 @@
+_INIT() - called at the start
+_LOOP() - called each frame
+
+functions of object _SYS
+
+buttonPressed -> button number -> reutrns whether the button is pressed
+buttonReleased -> button number -> returns whether the button was released
+clear -> color -> clear screen with the specified color
+drawTilemap -> scroll x, scroll y, x, y, width, height -> darw tilemap starting from scroll x and scroll y, on screen from x and y, a recatangle with width and height
+getTilemapTile -> x, y -> get the tilemap tile from coordinates x and y
+getTrackPosition -> playerNum -> returns current position in player playerNum
+getVolume -> playerNum -> returns volume level at player playerNum
+isLooping -> playerNum -> returns whether player playerNum is looping
+isPlaying -> playerNum -> returns whether player playerNum is playing
+loadTrack -> playerNum, fileName -> load file from fileName into player playerNum
+playTrack -> playerNum, fileName -> load file from fileName into player playerNum and start playing it
+resolution -> w, h -> set screen resolution to w and h
+setLooping -> playerNum, value -> set the looping status of player playerNum to value
+setPlaying -> playerNum, value -> set the playing status of player playerNum to value
+setTilemapTile -> x, y, value -> set the tilemap tile at coords x and y to value
+setTrackPosition -> playerNum, value -> set the current position of player playerNum to value
+setVolume -> playerNum, value -> set the volume level of player playerNum to value
+sprite -> index, x, y, fliph, flipv -> draw sprite with index, at x and y, fliph sets whether to flip it horizontally, flipv is whether to flip it vertically
+trackLength -> playerNum -> reutrn total length of track in player playerNum
