@@ -107,11 +107,15 @@ namespace ppu {
 	
 	void drawSprite(int index, int x, int y, bool fliph, bool flipv) {
 		for(int yy = 0; yy < tileHeight; yy++) {
-			if(y+yy >= windowHeight) {
+			if(y+yy < 0) {
+				continue;
+			} else if(y+yy >= windowHeight) {
 				break;
 			}
 			for(int xx = 0; xx < tileWidth; xx++) {
-				if(x+xx >= windowWidth) {
+				if(x+xx < 0) {
+					continue;
+				} else if(x+xx >= windowWidth) {
 					break;
 				}
 				int pixelIndex = (y+yy)*windowWidth+(x+xx);
