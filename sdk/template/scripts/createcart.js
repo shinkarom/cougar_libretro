@@ -13,8 +13,11 @@ const outputFilePath = "./output/"+outputFileName+'.cart'; // Output .cart file 
   try {	
 	const tmpobj = tmp.dirSync()
 	const tempFolderPath =tmpobj.name
+	
+	if(!fs.exists("output"))
 	await fs.mkdir("output")
-    await fs.copy("tiles", path.join(tempFolderPath, "CHR"));
+    
+	await fs.copy("tiles", path.join(tempFolderPath, "CHR"));
 	
 	await fs.mkdir(path.join(tempFolderPath, "SND"))
 	
