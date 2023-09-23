@@ -20,14 +20,14 @@ constexpr int maxScreenWidthPixels = maxScreenWidthTiles * tileWidth;
 constexpr int maxScreenHeightPixels = maxScreenHeightTiles * tileHeight;
 constexpr int maxScreenTotalPixels = maxScreenWidthPixels * maxScreenHeightPixels;
 
-constexpr int tilemapScreensWidth = 16;
-constexpr int tilemapScreensHeight = 16;
-constexpr int tilemapWidthTiles = tilemapScreensWidth * maxScreenWidthTiles;
-constexpr int tilemapHeightTiles = tilemapScreensHeight * maxScreenHeightTiles;
-constexpr int tilemapWidthPixels = tilemapWidthTiles * tileWidth;
-constexpr int tilemapHeightPixels = tilemapHeightTiles * tileHeight;
-constexpr int tilemapSizeTiles =  tilemapWidthTiles * tilemapHeightTiles;
-constexpr int tilemapSizePixels = tilemapWidthPixels * tilemapHeightPixels;
+constexpr int tilemapScreensWidth = 2;
+constexpr int tilemapScreensHeight = 2;
+constexpr int maxTilemapWidthTiles = tilemapScreensWidth * maxScreenWidthTiles;
+constexpr int maxTilemapHeightTiles = tilemapScreensHeight * maxScreenHeightTiles;
+constexpr int maxTilemapWidthPixels = maxTilemapWidthTiles * tileWidth;
+constexpr int maxTilemapHeightPixels = maxTilemapHeightTiles * tileHeight;
+constexpr int maxTilemapSizeTiles =  maxTilemapWidthTiles * maxTilemapHeightTiles;
+constexpr int maxTilemapSizePixels = maxTilemapWidthPixels * maxTilemapHeightPixels;
 
 constexpr int numTilePages = 256;
 constexpr int tilesPerRow = 16;

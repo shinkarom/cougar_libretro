@@ -14,7 +14,16 @@ namespace ppu {
 	int windowTotalPixels = windowWidth * windowHeight;
 	
 	uint32_t tiles[totalTilesSizeBytes];
-	uint16_t tilemap[tilemapSizeTiles];	
+	uint16_t tilemap[maxTilemapSizeTiles];	
+	
+	int screenWidthTiles = maxScreenWidthTiles;
+	int screenHeightTiles = maxScreenHeightTiles;
+	int tilemapWidthTiles = tilemapScreensWidth * screenWidthTiles;
+	int tilemapHeightTiles = tilemapScreensHeight * screenHeightTiles;
+	int tilemapWidthPixels = tilemapWidthTiles * tileWidth;
+	int tilemapHeightPixels = tilemapHeightTiles * tileHeight;
+	int tilemapSizeTiles =  tilemapWidthTiles * tilemapHeightTiles;
+	int tilemapSizePixels = tilemapWidthPixels * tilemapHeightPixels;
 	
 	set_resolution_t resolution_cb;
 	
@@ -84,7 +93,7 @@ namespace ppu {
 		frameBuf = buffer;
 		resolution_cb = resovalue;
 		
-		memset(tilemap,tilemapSizeTiles,0);
+		memset(tilemap,maxTilemapSizeTiles,0);
 	}
 	
 	void deinit() {
@@ -99,10 +108,23 @@ namespace ppu {
 		if(w<0 || w>maxScreenWidthPixels || h<0 || h>maxScreenHeightPixels) {
 			return;
 		}
+		if(w%tileWidth != 0 || h%tileHeight != 0) {
+			return;
+		}
 		resolution_cb(w, h);
 		windowWidth = w;
 		windowHeight = h;
 		windowTotalPixels = windowWidth * windowHeight;
+		
+		screenWidthTiles = w / tileWidth;
+		screenHeightTiles = h / tileHeight;
+		tilemapWidthTiles = tilemapScreensWidth * screenWidthTiles;
+		tilemapHeightTiles = tilemapScreensHeight * screenHeightTiles;
+		tilemapWidthPixels = tilemapWidthTiles * tileWidth;
+		tilemapHeightPixels = tilemapHeightTiles * tileHeight;
+		tilemapSizeTiles =  tilemapWidthTiles * tilemapHeightTiles;
+		tilemapSizePixels = tilemapWidthPixels * tilemapHeightPixels;
+
 	}
 	
 	void drawSprite(int index, int x, int y, bool fliph, bool flipv) {
@@ -137,7 +159,7 @@ namespace ppu {
 	}
 	
 	uint16_t getTilemapTile(int w, int h) {
-		if(w<0 || w>= tilemapWidthTiles || h<0 || h>=tilemapHeightTiles) {
+		if(w < 0 || w >= tilemapWidthTiles || h < 0 || h >= tilemapHeightTiles) {
 			return 0;
 		}
 		auto index = h*tilemapWidthTiles + w;
@@ -145,7 +167,7 @@ namespace ppu {
 	}
 	
 	void setTilemapTile(int w, int h, uint16_t value) {
-		if(w<0 || w>= tilemapWidthTiles || h<0 || h>=tilemapHeightTiles) {
+		if(w < 0 || w >= tilemapWidthTiles || h < 0 || h >= tilemapHeightTiles) {
 			return;
 		}
 		auto index = h*tilemapWidthTiles + w;
@@ -153,7 +175,7 @@ namespace ppu {
 	}
 	
 	void drawTilemap(int sx, int sy, int x, int y, int w, int h) {
-		if(sx < 0 || sx >= tilemapWidthTiles || sy <0 || sy >= tilemapHeightTiles) {
+		if(sx < 0 || sx >= tilemapWidthTiles || sy < 0 || sy >= tilemapHeightTiles) {
 			return;
 		}
 		//if(x < 0 || x >= windowWidth || y < 0 || y>= windowHeight) {

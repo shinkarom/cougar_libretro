@@ -33,7 +33,7 @@ bool Player::process() {
 		auto samplesNow = remaining < samplesPerTick ? remaining : samplesPerTick;
 		for(int i = 0; i<samplesNow; i++) {
 			buffer[i*2] = track[pos] / 10*volume;
-			buffer[i*2+1] = track[pos]/ 10*volume;
+			buffer[i*2+1] = track[pos] / 10*volume;
 			pos++;
 		}
 		if(samplesNow < samplesPerTick) {

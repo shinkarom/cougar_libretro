@@ -7,7 +7,7 @@ namespace ppu {
 	extern set_resolution_t resolution_cb;
 	
 	extern uint32_t tiles[totalTilesSizeBytes];
-	extern uint16_t tilemap[tilemapSizeTiles];
+	extern uint16_t tilemap[maxTilemapSizeTiles];
 	
 	extern uint32_t tiles[totalTilesSizeBytes];
 	
