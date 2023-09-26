@@ -226,34 +226,47 @@ namespace script {
 		return 0;
 	}
 	
-	const duk_function_list_entry cougarApi[] = {
-		{"loadTrack", apiLoadTrack, 2},
-		{"playTrack", apiPlayTrack, 2},
-		{"getVolume", apiGetVolume, 1},
-		{"setVolume", apiSetVolume, 2},
-		{"isPlaying", apiIsPlaying, 1},
-		{"setPlaying", apiSetPlaying, 2},
-		{"resolution", apiSetResolution, 2},
-		{"clear", apiClearScreen, 1},
-		{"sprite", apiDrawSprite, 5},
-		{"buttonPressed", apiButtonPressed, 1},
-		{"buttonReleased", apiButtonReleased, 1},
-		{"getTrackPosition", apiGetTrackPosition, 1},
-		{"setTrackPosition", apiSetTrackPosition, 2},
-		{"trackLength", apiTrackLength, 1},
-		{"isLooping", apiIsLooping, 1},
-		{"setLooping", apiSetLooping, 2},
-		{"getTilemapTile", apiGetTilemapTile, 2},
-		{"setTilemapTile", apiSetTilemapTile, 3},
-		{"drawTilemap", apiDrawTilemap, 6},
-		{nullptr, nullptr, 0}
-	};
+	
 	
 	void addApi() {
+		const duk_function_list_entry cougarApi[] = {
+			{"loadTrack", apiLoadTrack, 2},
+			{"getVolume", apiGetVolume, 1},
+			{"setVolume", apiSetVolume, 2},
+			{"resolution", apiSetResolution, 2},
+			{"getTrackPosition", apiGetTrackPosition, 1},
+			{"setTrackPosition", apiSetTrackPosition, 2},
+			{"trackLength", apiTrackLength, 1},
+			{"isLooping", apiIsLooping, 1},
+			{"setLooping", apiSetLooping, 2},
+			{"getTilemapTile", apiGetTilemapTile, 2},
+			{"setTilemapTile", apiSetTilemapTile, 3},
+			{nullptr, nullptr, 0}
+		};
+		
 		duk_push_global_object(ctx);
 		duk_push_object(ctx);
 		duk_put_prop_string(ctx, -2, globalObjectName);
 		duk_get_prop_string(ctx, -1, globalObjectName);
+		duk_put_function_list(ctx, -1, cougarApi);
+		duk_pop(ctx);
+	}
+	
+	void addApi2() {
+		const duk_function_list_entry cougarApi[] = {
+			{"playTrack", apiPlayTrack, 2},
+			{"isPlaying", apiIsPlaying, 1},
+			{"setPlaying", apiSetPlaying, 2},
+			{"clear", apiClearScreen, 1},
+			{"sprite", apiDrawSprite, 5},
+			{"buttonPressed", apiButtonPressed, 1},
+			{"buttonReleased", apiButtonReleased, 1},
+			{"drawTilemap", apiDrawTilemap, 6},
+			{nullptr, nullptr, 0}
+		};
+		
+		duk_get_global_string(ctx, globalObjectName);
+		duk_del_prop_string(ctx, -1, "resolution");
 		duk_put_function_list(ctx, -1, cougarApi);
 		duk_pop(ctx);
 	}

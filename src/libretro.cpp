@@ -233,21 +233,13 @@ void retro_run(void)
 {
    update_input();
 	
-	if(firstRun) {
-		if(!script::callInit()) {
-			environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, nullptr);
-			return;
-		}
-		firstRun = false;
-	} else {
-		if(!script::callVBlank()) {
-			environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, nullptr);
-		}	
-		
-		ppu::process();
+	if(!script::callVBlank()) {
+		environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, nullptr);
+	}	
 	
-		video_cb(frameBuf, screenWidth, screenHeight, screenWidth*sizeof(uint32_t));
-	}
+	ppu::process();
+
+	video_cb(frameBuf, screenWidth, screenHeight, screenWidth*sizeof(uint32_t));
 	
 
    bool updated = false;
@@ -294,6 +286,12 @@ bool retro_load_game(const struct retro_game_info *info)
 	}
    
    script::addApi();
+   
+   if(!script::callInit()) {
+		return false;
+	}
+   
+   script::addApi2();
    
    ppu::loadTiles();
    

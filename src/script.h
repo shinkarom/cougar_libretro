@@ -11,6 +11,7 @@ namespace script {
 	
 	bool loadFile(const char* filename);
 	void addApi();
+	void addApi2();
 	
 	bool callInit();
 	bool callVBlank();
