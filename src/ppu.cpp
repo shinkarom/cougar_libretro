@@ -105,19 +105,16 @@ namespace ppu {
 	}
 	
 	void setResolution(int w, int h) {
-		if(w<0 || w>maxScreenWidthPixels || h<0 || h>maxScreenHeightPixels) {
-			return;
-		}
-		if(w%tileWidth != 0 || h%tileHeight != 0) {
+		if(w<0 || w>maxScreenWidthTiles || h<0 || h>maxScreenHeightTiles) {
 			return;
 		}
 		resolution_cb(w, h);
-		windowWidth = w;
-		windowHeight = h;
+		windowWidth = w * tileWidth;
+		windowHeight = h * tileHeight;
 		windowTotalPixels = windowWidth * windowHeight;
 		
-		screenWidthTiles = w / tileWidth;
-		screenHeightTiles = h / tileHeight;
+		screenWidthTiles = w;
+		screenHeightTiles = h;
 		tilemapWidthTiles = tilemapScreensWidth * screenWidthTiles;
 		tilemapHeightTiles = tilemapScreensHeight * screenHeightTiles;
 		tilemapWidthPixels = tilemapWidthTiles * tileWidth;

@@ -51,16 +51,16 @@ static void fallback_log(enum retro_log_level level, const char *fmt, ...)
 }
 
 void setResolution(int w, int h) {
-	if(w<0 || w>maxScreenWidthPixels || h<0 || h>maxScreenHeightPixels) {
+	if(w<0 || w>maxScreenWidthTiles || h<0 || h>maxScreenHeightTiles) {
 		return;
 	}
 	retro_game_geometry geo;
-	geo.base_width = w;
-	geo.base_height = h;
+	geo.base_width = w * tileWidth;
+	geo.base_height = h * tileHeight;
 	geo.aspect_ratio = 0.0f;
 	if(environ_cb(RETRO_ENVIRONMENT_SET_GEOMETRY, &geo)) {
-		screenWidth = w;
-		screenHeight = h;
+		screenWidth = w * tileWidth;
+		screenHeight = h * tileHeight;
 	}
 }
 
