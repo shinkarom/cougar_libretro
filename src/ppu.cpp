@@ -67,6 +67,12 @@ namespace ppu {
 			for(auto pxn = 0; pxn < pageSizePixels; pxn++) {
 				auto px = pixels[pxn];
 				
+				auto alpha = (px>>24)&0xFF;
+				auto red = (px>>16)&0xFF;
+				auto green = (px>>8)&0xFF;
+				auto blue = px&0xFF;
+				px = (alpha<<24)|(blue<<16)|(green<<8)|red;
+				
 				auto baseY = pxn / tilePageWidth;
 				auto baseX = pxn % tilePageWidth;
 				
