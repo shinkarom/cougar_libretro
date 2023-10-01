@@ -57,7 +57,7 @@ namespace apu {
 			return;
 		}
 		char fullFilename[256];
-		sprintf(fullFilename, "/SND/%s", fileName);
+		sprintf(fullFilename, "/SND/%s.ogg", fileName);
 		
 		char* fileBuffer;
 		auto r = fs::readBinaryFile(fullFilename, &fileBuffer, true);
@@ -76,7 +76,7 @@ namespace apu {
 		if(result == -1) {
 			std::cout<<"[COUGAR] couldn't decode "<<fileName<<std::endl;
 		} else {
-			players[playerNum].loadTrack(output, result	);
+			players[playerNum].loadTrack(output, result);
 			std::cout<<"[COUGAR] "<<sample_rate<<" "<<result<<std::endl;
 		}
 		
