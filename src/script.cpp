@@ -56,6 +56,42 @@ namespace script {
 		return true;
 	}
 	
+	bool readConfig() {
+		int w, h;
+		if(!duk_get_global_string(ctx, configObjectName) || 
+			!duk_is_object(ctx, -1)) {
+			std::cout<<"[COUGAR] No object "<<configObjectName<<std::endl;
+			return false;
+		}
+		duk_get_prop_string(ctx, -1, "WIDTH");
+		if(duk_is_number(ctx, -1)) {
+			w = duk_get_int(ctx, -1);
+			if(w < 1 || w >= maxScreenWidthTiles)  {
+				std::cout<<"[COUGAR] Width must be from 1 to "<<maxScreenWidthTiles<<std::endl;
+				return false;
+			}
+		} else {
+			std::cout<<"[COUGAR] No width in config."<<std::endl;
+			return false;
+		}
+		duk_pop(ctx);
+		duk_get_prop_string(ctx, -1, "HEIGHT");
+		if(duk_is_number(ctx, -1)) {
+			h = duk_get_int(ctx, -1);
+			if(h < 1 || h >= maxScreenHeightTiles)  {
+				std::cout<<"[COUGAR] Height must be from 1 to "<<maxScreenHeightTiles<<std::endl;
+				return false;
+			}
+		} else {
+			std::cout<<"[COUGAR] No height in config."<<std::endl;
+			return false;
+		}
+		duk_pop(ctx);
+		duk_pop(ctx);
+		ppu::setResolution(w, h);
+		return true;
+	}
+	
 	bool callInit() {
 		duk_get_global_string(ctx, mainObjectName);
 		duk_get_prop_string(ctx, -1, initName);
@@ -118,13 +154,6 @@ namespace script {
 		auto playerNum = duk_require_int(ctx, -2);
 		auto value = duk_require_boolean(ctx, -1);
 		apu::setPlaying(playerNum, value);
-		return 0;
-	}
-	
-	duk_ret_t apiSetResolution(duk_context* ctx) {
-		auto w = duk_require_int(ctx, -2);
-		auto h = duk_require_int(ctx, -1);
-		ppu::setResolution(w, h);
 		return 0;
 	}
 	
@@ -230,17 +259,16 @@ namespace script {
 	
 	void addApi() {
 		const duk_function_list_entry cougarApi[] = {
-			{"loadTrack", apiLoadTrack, 2},
-			{"getVolume", apiGetVolume, 1},
-			{"setVolume", apiSetVolume, 2},
-			{"resolution", apiSetResolution, 2},
-			{"getTrackPosition", apiGetTrackPosition, 1},
-			{"setTrackPosition", apiSetTrackPosition, 2},
-			{"trackLength", apiTrackLength, 1},
-			{"isLooping", apiIsLooping, 1},
-			{"setLooping", apiSetLooping, 2},
-			{"getTilemapTile", apiGetTilemapTile, 2},
-			{"setTilemapTile", apiSetTilemapTile, 3},
+			{"LOADTRACK", apiLoadTrack, 2},
+			{"GETVOLUME", apiGetVolume, 1},
+			{"SETVOLUME", apiSetVolume, 2},
+			{"GETTRACKPOSITION", apiGetTrackPosition, 1},
+			{"SETTRACKPOSITION", apiSetTrackPosition, 2},
+			{"TRACKLENGTH", apiTrackLength, 1},
+			{"ISLOOPING", apiIsLooping, 1},
+			{"SETLOOPING", apiSetLooping, 2},
+			{"GETTILEMAPTILE", apiGetTilemapTile, 2},
+			{"SETTILEMAPTILE", apiSetTilemapTile, 3},
 			{nullptr, nullptr, 0}
 		};
 		
@@ -254,19 +282,18 @@ namespace script {
 	
 	void addApi2() {
 		const duk_function_list_entry cougarApi[] = {
-			{"playTrack", apiPlayTrack, 2},
-			{"isPlaying", apiIsPlaying, 1},
-			{"setPlaying", apiSetPlaying, 2},
-			{"clear", apiClearScreen, 1},
-			{"sprite", apiDrawSprite, 5},
-			{"buttonPressed", apiButtonPressed, 1},
-			{"buttonReleased", apiButtonReleased, 1},
-			{"drawTilemap", apiDrawTilemap, 6},
+			{"PLAYTRACK", apiPlayTrack, 2},
+			{"ISPLAYING", apiIsPlaying, 1},
+			{"SETPLAYING", apiSetPlaying, 2},
+			{"CLEAR", apiClearScreen, 1},
+			{"SPRITE", apiDrawSprite, 5},
+			{"BUTTONPRESSED", apiButtonPressed, 1},
+			{"BUTTONRELEASED", apiButtonReleased, 1},
+			{"DRAWTILEMAP", apiDrawTilemap, 6},
 			{nullptr, nullptr, 0}
 		};
 		
 		duk_get_global_string(ctx, globalObjectName);
-		duk_del_prop_string(ctx, -1, "resolution");
 		duk_put_function_list(ctx, -1, cougarApi);
 		duk_pop(ctx);
 	}

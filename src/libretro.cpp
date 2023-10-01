@@ -285,6 +285,10 @@ bool retro_load_game(const struct retro_game_info *info)
 		return false;
 	}
    
+   if(!script::readConfig()) {
+		return false;
+	}
+   
    script::addApi();
    
    if(!script::callInit()) {
