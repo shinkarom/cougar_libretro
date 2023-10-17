@@ -57,7 +57,7 @@ namespace script {
 	}
 	
 	bool readConfig() {
-		int w, h, sw, sh;
+		int w, h, sw, sh, b;
 		if(!duk_get_global_string(ctx, configObjectName) || 
 			!duk_is_object(ctx, -1)) {
 			std::cout<<"[COUGAR] No object "<<configObjectName<<std::endl;
@@ -111,8 +111,22 @@ namespace script {
 			return false;
 		}
 		duk_pop(ctx);
+		duk_get_prop_string(ctx, -1, "BITS");
+		if(duk_is_number(ctx, -1)) {
+			b = duk_get_int(ctx, -1);
+			if(h < 1 || h > maxAudioBits)  {
+				std::cout<<"[COUGAR] Audio bits must be from 1 to "<<maxAudioBits<<std::endl;
+				return false;
+			}
+		} else {
+			std::cout<<"[COUGAR] No audio bits in config."<<std::endl;
+			return false;
+		}
+		duk_pop(ctx);
+		
 		duk_pop(ctx);
 		ppu::setResolution(w, h, sw, sh);
+		apu::setBits(b);
 		return true;
 	}
 	

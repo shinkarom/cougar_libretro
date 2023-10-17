@@ -10,6 +10,7 @@ namespace apu {
 	
 	uint16_t* process();
 	
+	void setBits(int bits);
 	void loadFile(int playerNum, int trackNum);
 	int getVolume(int playerNum);
 	void setVolume(int playerNum, int value);

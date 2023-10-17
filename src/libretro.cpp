@@ -28,7 +28,6 @@ static float last_aspect;
 static float last_sample_rate;
 char retro_base_directory[4096];
 char retro_game_path[4096];
-bool firstRun;
 
 static retro_video_refresh_t video_cb;
 static retro_audio_sample_t audio_cb;
@@ -69,8 +68,6 @@ void retro_init(void)
 	
    frameBuf = new uint32_t[maxScreenTotalPixels];
    memset(frameBuf,0,maxScreenTotalPixels*4);
-   
-   firstRun = true;
    
 	fs::init();
 	script::init();
