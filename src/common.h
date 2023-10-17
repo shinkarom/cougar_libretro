@@ -20,10 +20,10 @@ constexpr int maxScreenWidthPixels = maxScreenWidthTiles * tileWidth;
 constexpr int maxScreenHeightPixels = maxScreenHeightTiles * tileHeight;
 constexpr int maxScreenTotalPixels = maxScreenWidthPixels * maxScreenHeightPixels;
 
-constexpr int tilemapScreensWidth = 2;
-constexpr int tilemapScreensHeight = 2;
-constexpr int maxTilemapWidthTiles = tilemapScreensWidth * maxScreenWidthTiles;
-constexpr int maxTilemapHeightTiles = tilemapScreensHeight * maxScreenHeightTiles;
+constexpr int maxTilemapScreensWidth = 16;
+constexpr int maxTilemapScreensHeight = 16;
+constexpr int maxTilemapWidthTiles = maxTilemapScreensWidth * maxScreenWidthTiles;
+constexpr int maxTilemapHeightTiles = maxTilemapScreensHeight * maxScreenHeightTiles;
 constexpr int maxTilemapWidthPixels = maxTilemapWidthTiles * tileWidth;
 constexpr int maxTilemapHeightPixels = maxTilemapHeightTiles * tileHeight;
 constexpr int maxTilemapSizeTiles =  maxTilemapWidthTiles * maxTilemapHeightTiles;

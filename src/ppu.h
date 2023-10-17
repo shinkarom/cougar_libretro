@@ -18,7 +18,7 @@ namespace ppu {
 	
 	void process();
 	
-	void setResolution(int w, int h);
+	void setResolution(int w, int h, int sw, int sh);
 	void drawSprite(int index, int x, int y, bool fliph, bool flipv);
 	void clearScreen(int32_t color);
 	

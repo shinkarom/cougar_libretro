@@ -57,7 +57,7 @@ namespace script {
 	}
 	
 	bool readConfig() {
-		int w, h;
+		int w, h, sw, sh;
 		if(!duk_get_global_string(ctx, configObjectName) || 
 			!duk_is_object(ctx, -1)) {
 			std::cout<<"[COUGAR] No object "<<configObjectName<<std::endl;
@@ -66,7 +66,7 @@ namespace script {
 		duk_get_prop_string(ctx, -1, "WIDTH");
 		if(duk_is_number(ctx, -1)) {
 			w = duk_get_int(ctx, -1);
-			if(w < 1 || w >= maxScreenWidthTiles)  {
+			if(w < 1 || w > maxScreenWidthTiles)  {
 				std::cout<<"[COUGAR] Width must be from 1 to "<<maxScreenWidthTiles<<std::endl;
 				return false;
 			}
@@ -78,7 +78,7 @@ namespace script {
 		duk_get_prop_string(ctx, -1, "HEIGHT");
 		if(duk_is_number(ctx, -1)) {
 			h = duk_get_int(ctx, -1);
-			if(h < 1 || h >= maxScreenHeightTiles)  {
+			if(h < 1 || h > maxScreenHeightTiles)  {
 				std::cout<<"[COUGAR] Height must be from 1 to "<<maxScreenHeightTiles<<std::endl;
 				return false;
 			}
@@ -87,8 +87,32 @@ namespace script {
 			return false;
 		}
 		duk_pop(ctx);
+		duk_get_prop_string(ctx, -1, "SCREENSWIDTH");
+		if(duk_is_number(ctx, -1)) {
+			sw = duk_get_int(ctx, -1);
+			if(sw < 1 || w > maxTilemapScreensWidth)  {
+				std::cout<<"[COUGAR] Screens width must be from 1 to "<<maxTilemapScreensWidth<<std::endl;
+				return false;
+			}
+		} else {
+			std::cout<<"[COUGAR] No screens width in config."<<std::endl;
+			return false;
+		}
 		duk_pop(ctx);
-		ppu::setResolution(w, h);
+		duk_get_prop_string(ctx, -1, "SCREENSHEIGHT");
+		if(duk_is_number(ctx, -1)) {
+			sh = duk_get_int(ctx, -1);
+			if(h < 1 || h > maxTilemapScreensHeight)  {
+				std::cout<<"[COUGAR] Screens height must be from 1 to "<<maxTilemapScreensHeight<<std::endl;
+				return false;
+			}
+		} else {
+			std::cout<<"[COUGAR] No screens height in config."<<std::endl;
+			return false;
+		}
+		duk_pop(ctx);
+		duk_pop(ctx);
+		ppu::setResolution(w, h, sw, sh);
 		return true;
 	}
 	

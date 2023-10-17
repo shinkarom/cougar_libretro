@@ -16,6 +16,8 @@ namespace ppu {
 	uint32_t tiles[totalTilesSizeBytes];
 	uint16_t tilemap[maxTilemapSizeTiles];	
 	
+	int tilemapScreensWidth = maxTilemapScreensWidth;
+	int tilemapScreensHeight = maxTilemapScreensHeight;
 	int screenWidthTiles = maxScreenWidthTiles;
 	int screenHeightTiles = maxScreenHeightTiles;
 	int tilemapWidthTiles = tilemapScreensWidth * screenWidthTiles;
@@ -110,8 +112,11 @@ namespace ppu {
 		
 	}
 	
-	void setResolution(int w, int h) {
+	void setResolution(int w, int h, int sw, int sh) {
 		if(w<0 || w>maxScreenWidthTiles || h<0 || h>maxScreenHeightTiles) {
+			return;
+		}
+		if(sw < 1 || sw > maxTilemapScreensWidth || sh < 1 || sh > maxTilemapScreensHeight) {
 			return;
 		}
 		resolution_cb(w, h);
@@ -121,6 +126,8 @@ namespace ppu {
 		
 		screenWidthTiles = w;
 		screenHeightTiles = h;
+		tilemapScreensWidth = sw;
+		tilemapScreensHeight = sh;
 		tilemapWidthTiles = tilemapScreensWidth * screenWidthTiles;
 		tilemapHeightTiles = tilemapScreensHeight * screenHeightTiles;
 		tilemapWidthPixels = tilemapWidthTiles * tileWidth;
