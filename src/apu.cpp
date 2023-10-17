@@ -52,12 +52,15 @@ namespace apu {
 		return buffer;
 	}
 	
-	void loadFile(int playerNum, const char* fileName) {
+	void loadFile(int playerNum, int trackNum) {
 		if(playerNum<0 || playerNum>=maxPlayers) {
 			return;
 		}
+		if(trackNum < 0 || trackNum >= maxAudioTracks) {
+			return;
+		}
 		char fullFilename[256];
-		sprintf(fullFilename, "/SND/%s.ogg", fileName);
+		sprintf(fullFilename, "/SND/SND_%04X.ogg", trackNum);
 		
 		char* fileBuffer;
 		auto r = fs::readBinaryFile(fullFilename, &fileBuffer, true);
@@ -74,7 +77,7 @@ namespace apu {
 		// TODO remove this line after implementing players.
 		delete[] fileBuffer;
 		if(result == -1) {
-			std::cout<<"[COUGAR] couldn't decode "<<fileName<<std::endl;
+			std::cout<<"[COUGAR] couldn't decode "<<fullFilename<<std::endl;
 		} else {
 			players[playerNum].loadTrack(output, result);
 			std::cout<<"[COUGAR] "<<sample_rate<<" "<<result<<std::endl;

@@ -140,15 +140,21 @@ namespace script {
 	
 	duk_ret_t apiLoadTrack(duk_context *ctx) {
 		auto playerNum = duk_require_int(ctx, -2);
-		const char* fileName = duk_require_string(ctx, -1);
-		apu::loadFile(playerNum, fileName);
+		int trackNum = duk_require_int(ctx, -1);
+		if(trackNum < 0 || trackNum >= maxAudioTracks) {
+			return 0;
+		}
+		apu::loadFile(playerNum, trackNum);
 		return 0;
 	}
 	
 	duk_ret_t apiPlayTrack(duk_context *ctx) {
 		auto playerNum = duk_require_int(ctx, -2);
-		const char* fileName = duk_require_string(ctx, -1);
-		apu::loadFile(playerNum, fileName);
+		int trackNum = duk_require_int(ctx, -1);
+		if(trackNum < 0 || trackNum >= maxAudioTracks) {
+			return 0;
+		}
+		apu::loadFile(playerNum, trackNum);
 		apu::setPlaying(playerNum, true);
 		return 0;
 	}
