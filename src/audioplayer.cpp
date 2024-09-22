@@ -25,7 +25,7 @@ void Player::loadTrack(int16_t* tr, int length) {
 	pos = 0;
 }
 
-bool Player::process(int bits) {
+bool Player::process() {
 	memset(buffer, 0, samplesPerTick * 2);
 	if(!playing) {
 		return false;
@@ -34,10 +34,6 @@ bool Player::process(int bits) {
 		auto samplesNow = remaining < samplesPerTick ? remaining : samplesPerTick;
 		for(int i = 0; i<samplesNow; i++) {		
 			auto sample = track[pos];
-			if(bits != maxAudioBits) {
-				sample >>= maxAudioBits - bits;
-				sample <<= maxAudioBits - bits;
-			}
 			buffer[i * 2] = sample;
 			buffer[i*2+1] = buffer[i*2];
 			pos++;

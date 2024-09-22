@@ -119,6 +119,8 @@ namespace ppu {
 		if(sw < 1 || sw > maxTilemapScreensWidth || sh < 1 || sh > maxTilemapScreensHeight) {
 			return;
 		}
+		w=w*2;
+		h=h*2;
 		resolution_cb(w, h);
 		windowWidth = w * tileWidth;
 		windowHeight = h * tileHeight;

@@ -20,7 +20,6 @@ namespace apu {
 	
 	short* output;
 	bool playing = false;
-	int audioBits = maxAudioBits;
 	
 	void init() {
 		memset(buffer, 0, samplesPerTick*2*2);
@@ -30,18 +29,12 @@ namespace apu {
 		
 	}
 	
-	void setBits(int bits) {
-		if(bits > 0 && bits <= maxAudioBits) {
-			audioBits = bits;
-		}
-	}
-	
 	uint16_t* process() {
 		memset(buffer, 0, samplesPerTick * 2);
 		int64_t sample = 0;
 		int playings = 0;
 		for (int i = 0; i<maxPlayers; i++) {
-			if(players[i].process(audioBits)) {
+			if(players[i].process()) {
 				playings++;
 			}
 		}

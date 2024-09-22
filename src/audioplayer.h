@@ -11,7 +11,7 @@ class Player {
 		~Player();
 		void loadTrack(int16_t* tr, int length);
 		void unloadTrack();
-		bool process(int bits);
+		bool process();
 		void setPosition(int value);
 		int64_t getPosition();
 		bool isActive();
