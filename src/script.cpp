@@ -87,33 +87,9 @@ namespace script {
 			return false;
 		}
 		duk_pop(ctx);
-		duk_get_prop_string(ctx, -1, "SCREENSWIDTH");
-		if(duk_is_number(ctx, -1)) {
-			sw = duk_get_int(ctx, -1);
-			if(sw < 1 || w > maxTilemapScreensWidth)  {
-				std::cout<<"[COUGAR] Screens width must be from 1 to "<<maxTilemapScreensWidth<<std::endl;
-				return false;
-			}
-		} else {
-			std::cout<<"[COUGAR] No screens width in config."<<std::endl;
-			return false;
-		}
-		duk_pop(ctx);
-		duk_get_prop_string(ctx, -1, "SCREENSHEIGHT");
-		if(duk_is_number(ctx, -1)) {
-			sh = duk_get_int(ctx, -1);
-			if(h < 1 || h > maxTilemapScreensHeight)  {
-				std::cout<<"[COUGAR] Screens height must be from 1 to "<<maxTilemapScreensHeight<<std::endl;
-				return false;
-			}
-		} else {
-			std::cout<<"[COUGAR] No screens height in config."<<std::endl;
-			return false;
-		}
-		duk_pop(ctx);
 		
 		duk_pop(ctx);
-		ppu::setResolution(w, h, sw, sh);
+		ppu::setResolution(w, h);
 		return true;
 	}
 	

@@ -8,7 +8,6 @@ constexpr auto audioSampleRate = 22050;
 constexpr auto samplesPerTick = audioSampleRate / fps;
 constexpr auto maxPlayers = 4;
 constexpr auto maxAudioTracks = 0xFFFF + 1;
-constexpr int maxAudioBits = 16;
 	
 constexpr int tileWidth = 8;
 constexpr int tileHeight = 8;
@@ -22,14 +21,14 @@ constexpr int maxScreenWidthPixels = maxScreenWidthTiles * tileWidth;
 constexpr int maxScreenHeightPixels = maxScreenHeightTiles * tileHeight;
 constexpr int maxScreenTotalPixels = maxScreenWidthPixels * maxScreenHeightPixels;
 
-constexpr int maxTilemapScreensWidth = 16;
-constexpr int maxTilemapScreensHeight = 16;
-constexpr int maxTilemapWidthTiles = maxTilemapScreensWidth * maxScreenWidthTiles;
-constexpr int maxTilemapHeightTiles = maxTilemapScreensHeight * maxScreenHeightTiles;
-constexpr int maxTilemapWidthPixels = maxTilemapWidthTiles * tileWidth;
-constexpr int maxTilemapHeightPixels = maxTilemapHeightTiles * tileHeight;
-constexpr int maxTilemapSizeTiles =  maxTilemapWidthTiles * maxTilemapHeightTiles;
-constexpr int maxTilemapSizePixels = maxTilemapWidthPixels * maxTilemapHeightPixels;
+constexpr int tilemapScreensWidth = 2;
+constexpr int tilemapScreensHeight = 2;
+constexpr int tilemapWidthTiles = tilemapScreensWidth * maxScreenWidthTiles;
+constexpr int tilemapHeightTiles = tilemapScreensHeight * maxScreenHeightTiles;
+constexpr int tilemapWidthPixels = tilemapWidthTiles * tileWidth;
+constexpr int tilemapHeightPixels = tilemapHeightTiles * tileHeight;
+constexpr int tilemapSizeTiles =  tilemapWidthTiles * tilemapHeightTiles;
+constexpr int ttilemapSizePixels = tilemapWidthPixels * tilemapHeightPixels;
 
 constexpr int numTilePages = 256;
 constexpr int tilesPerRow = 16;

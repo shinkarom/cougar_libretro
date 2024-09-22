@@ -14,18 +14,10 @@ namespace ppu {
 	int windowTotalPixels = windowWidth * windowHeight;
 	
 	uint32_t tiles[totalTilesSizeBytes];
-	uint16_t tilemap[maxTilemapSizeTiles];	
+	uint16_t tilemap[tilemapSizeTiles];	
 	
-	int tilemapScreensWidth = maxTilemapScreensWidth;
-	int tilemapScreensHeight = maxTilemapScreensHeight;
 	int screenWidthTiles = maxScreenWidthTiles;
 	int screenHeightTiles = maxScreenHeightTiles;
-	int tilemapWidthTiles = tilemapScreensWidth * screenWidthTiles;
-	int tilemapHeightTiles = tilemapScreensHeight * screenHeightTiles;
-	int tilemapWidthPixels = tilemapWidthTiles * tileWidth;
-	int tilemapHeightPixels = tilemapHeightTiles * tileHeight;
-	int tilemapSizeTiles =  tilemapWidthTiles * tilemapHeightTiles;
-	int tilemapSizePixels = tilemapWidthPixels * tilemapHeightPixels;
 	
 	set_resolution_t resolution_cb;
 	
@@ -101,7 +93,7 @@ namespace ppu {
 		frameBuf = buffer;
 		resolution_cb = resovalue;
 		
-		memset(tilemap,maxTilemapSizeTiles,0);
+		memset(tilemap,tilemapSizeTiles,0);
 	}
 	
 	void deinit() {
@@ -112,11 +104,8 @@ namespace ppu {
 		
 	}
 	
-	void setResolution(int w, int h, int sw, int sh) {
-		if(w<0 || w>maxScreenWidthTiles || h<0 || h>maxScreenHeightTiles) {
-			return;
-		}
-		if(sw < 1 || sw > maxTilemapScreensWidth || sh < 1 || sh > maxTilemapScreensHeight) {
+	void setResolution(int w, int h) {
+		if(w<0 || w>maxScreenWidthTiles/2 || h<0 || h>maxScreenHeightTiles/2) {
 			return;
 		}
 		w=w*2;
@@ -128,14 +117,6 @@ namespace ppu {
 		
 		screenWidthTiles = w;
 		screenHeightTiles = h;
-		tilemapScreensWidth = sw;
-		tilemapScreensHeight = sh;
-		tilemapWidthTiles = tilemapScreensWidth * screenWidthTiles;
-		tilemapHeightTiles = tilemapScreensHeight * screenHeightTiles;
-		tilemapWidthPixels = tilemapWidthTiles * tileWidth;
-		tilemapHeightPixels = tilemapHeightTiles * tileHeight;
-		tilemapSizeTiles =  tilemapWidthTiles * tilemapHeightTiles;
-		tilemapSizePixels = tilemapWidthPixels * tilemapHeightPixels;
 
 	}
 	
