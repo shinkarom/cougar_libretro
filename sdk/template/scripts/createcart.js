@@ -7,14 +7,6 @@ const execSync = require("child_process").execSync
 const PNG = require('pngjs').PNG;
 const getPixels = require('get-pixels');
 
-const platformConfigPath = path.join(__dirname, "..", 'platform.json'); // Assuming platform.json is in the project folder
-const platformConfig = JSON.parse(fs.readFileSync(platformConfigPath, 'utf8'));
-
-const globalColorLimit = platformConfig.MAXCOLORSTOTAL || 0; // Default to 0 if not specified
-const fileColorLimit = platformConfig.MAXCOLORSFILE || 0; // Default to 0 if not specified
-const tileColorLimit = platformConfig.MAXCOLORSTILE || 0; // Default to 0 if not specified
-
-
 const outputFileName = process.argv[2] || "output";
 
 const outputFilePath = "./output/" + outputFileName + '.cart'; // Output .cart file name
@@ -46,43 +38,6 @@ const outputFilePath = "./output/" + outputFileName + '.cart'; // Output .cart f
                             reject(new Error(`File ${filePath} must be 128x128 pixels.`));
                             return;
                         }
-
-                        // Analyze the color palette of the file
-                        getPixels(filePath, 'image/png', (err, pixels) => {
-                            if (err) {
-                                reject(err);
-                                return;
-                            }
-
-                            const uniqueColors = new Set();
-                            for (let y = 0; y < height; y += 8) {
-                                for (let x = 0; x < width; x += 8) {
-                                    const tileColors = new Set();
-
-                                    for (let tileY = y; tileY < y + 8; tileY++) {
-                                        for (let tileX = x; tileX < x + 8; tileX++) {
-                                            const pixel = pixels.get(tileX, tileY, 0);
-                                            tileColors.add(pixel);
-                                            uniqueColors.add(pixel);
-                                            globalPalette.add(pixel);
-                                        }
-                                    }
-
-                                    if (tileColorLimit > 0 && tileColors.size > tileColorLimit) {
-                                        reject(new Error(`Tile in ${filePath} exceeds color limit: ${tileColors.size} colors, limit is ${tileColorLimit}.`));
-                                        return;
-                                    }
-
-                                }
-                            }
-
-                            if (fileColorLimit > 0 && uniqueColors.size > fileColorLimit) {
-                                reject(new Error(`File ${filePath} exceeds color limit: ${uniqueColors.size} colors, limit is ${fileColorLimit}.`));
-                                return;
-                            }
-
-                            resolve(filePath);
-                        });
                     })
                     .on('error', (err) => {
                         reject(err);
