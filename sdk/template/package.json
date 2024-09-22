@@ -8,7 +8,7 @@
     "process-maps": "node scripts/processmaps.js",
     "add-tile-page": "node scripts/addtilepage.js",
     "zip-project": "node scripts/zip-project.js",
-	"run-retroarch": "node scripts/run-retroarch.js"
+    "run-retroarch": "node scripts/run-retroarch.js"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +21,6 @@
     "browserify": "^17.0.0",
     "commander": "^11.0.0",
     "fs-extra": "^11.1.1",
-    "get-pixels": "^3.3.3",
     "pngjs": "^7.0.0",
     "replace-ext": "^2.0.0",
     "sharp": "^0.32.5",

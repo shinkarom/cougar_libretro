@@ -5,7 +5,6 @@ const tmp = require('tmp')
 const browserify = require("browserify")
 const execSync = require("child_process").execSync
 const PNG = require('pngjs').PNG;
-const getPixels = require('get-pixels');
 
 const outputFileName = process.argv[2] || "output";
 
@@ -20,8 +19,6 @@ const outputFilePath = "./output/" + outputFileName + '.cart'; // Output .cart f
             await fs.mkdir("output")
 
         //++++Images
-
-        const globalPalette = new Set(); // Initialize the global color palette
 
         // Function to validate a PNG file
         function validatePNG(filePath) {
@@ -38,6 +35,7 @@ const outputFilePath = "./output/" + outputFileName + '.cart'; // Output .cart f
                             reject(new Error(`File ${filePath} must be 128x128 pixels.`));
                             return;
                         }
+						resolve(filePath);
                     })
                     .on('error', (err) => {
                         reject(err);
@@ -51,22 +49,22 @@ const outputFilePath = "./output/" + outputFileName + '.cart'; // Output .cart f
         const validFiles = [];
 
         for (const file of files) {
+			
             if (/^CHR_[0-9A-Fa-f]{2}\.png$/.test(file)) {
+				
                 const filePath = path.join("tiles", file);
                 try {
-                    const validFile = await validatePNG(filePath, tileColorLimit, fileColorLimit, globalColorLimit);
+                    const validFile = await validatePNG(filePath);
+					
                     const destinationPath = path.join(tempFolderPath, file);
 
                     fs.promises.copyFile(filePath, path.join(tempFolderPath, "CHR", file));
                     //console.log(`Valid file copied to: ${destinationPath}`);
                     validFiles.push(file);
+					
                 } catch (error) {
                     throw new Error(`Error processing ${filePath}: ${error.message}`);
                 }
-            }
-            // Check the global palette against the global color limit
-            if (globalColorLimit > 0 && globalPalette.size > globalColorLimit) {
-                throw new Error(`Global color limit exceeded: ${globalPalette.size} colors, limit is ${globalColorLimit}.`);
             }
 
         }
