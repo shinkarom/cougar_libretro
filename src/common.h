@@ -14,8 +14,8 @@ constexpr int tileHeight = 8;
 constexpr int tileSizePixels = tileWidth * tileHeight;
 constexpr int tileSizeBytes = tileSizePixels * sizeof(uint32_t);
 
-constexpr int maxScreenWidthTiles = 40;
-constexpr int maxScreenHeightTiles = 40;
+constexpr int maxScreenWidthTiles = 32;
+constexpr int maxScreenHeightTiles = 32;
 
 constexpr int maxScreenWidthPixels = maxScreenWidthTiles * tileWidth;
 constexpr int maxScreenHeightPixels = maxScreenHeightTiles * tileHeight;
