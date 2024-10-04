@@ -6,7 +6,6 @@
 #include <cmath>
 #include <cstdio>
 #include <iostream>
-#include "stb_vorbis.h"
 
 #include "audioplayer.h"
 
@@ -22,7 +21,7 @@ namespace apu {
 	bool playing = false;
 	
 	void init() {
-		memset(buffer, 0, samplesPerTick*2*2);
+		memset(buffer, 0, samplesPerTick*sizeof(int16_t)*2);
 	}
 	
 	void deinit() {
@@ -52,38 +51,6 @@ namespace apu {
 		return buffer;
 	}
 	
-	void loadFile(int playerNum, int trackNum) {
-		if(playerNum<0 || playerNum>=maxPlayers) {
-			return;
-		}
-		if(trackNum < 0 || trackNum >= maxAudioTracks) {
-			return;
-		}
-		char fullFilename[256];
-		sprintf(fullFilename, "/SND/SND_%04X.ogg", trackNum);
-		
-		char* fileBuffer;
-		auto r = fs::readBinaryFile(fullFilename, &fileBuffer, true);
-		if(r==-1) {
-			std::cout<<"[COUGAR] Couldn't read file "<<fullFilename<<std::endl;
-			return;
-		}
-		
-		int error;
-		int channels = 0;
-		int sample_rate = 0;
-		
-		auto result = stb_vorbis_decode_memory((unsigned char*)fileBuffer, r, &channels, &sample_rate, &output);
-		
-		delete[] fileBuffer;
-		if(result == -1) {
-			std::cout<<"[COUGAR] couldn't decode "<<fullFilename<<std::endl;
-		} else {
-			players[playerNum].loadTrack(output, result);
-			std::cout<<"[COUGAR] "<<sample_rate<<" "<<result<<std::endl;
-		}
-		
-	}
 
 	int getVolume(int playerNum) {
 		if(playerNum<0 || playerNum>=maxPlayers) {
@@ -97,55 +64,6 @@ namespace apu {
 			return;
 		}
 		players[playerNum].setVolume(value);
-	}
-	
-	int32_t getPosition(int playerNum) {
-		if(playerNum<0 || playerNum>=maxPlayers) {
-			return -1;
-		}
-		return players[playerNum].getPosition();
-	}
-	
-	void setPosition(int playerNum, int32_t value) {
-		if(playerNum<0 || playerNum>=maxPlayers) {
-			return;
-		}
-		players[playerNum].setPosition(value);
-	}
-	
-	int32_t trackLength(int playerNum) {
-		if(playerNum<0 || playerNum>=maxPlayers) {
-			return -1;
-		}
-		return players[playerNum].getLength();
-	}
-	
-	bool isLooping(int playerNum) {
-		if(playerNum<0 || playerNum>=maxPlayers) {
-			return -1;
-		}
-		return players[playerNum].isLooping();
-	}
-	
-	void setLooping(int playerNum, bool value) {
-		if(playerNum<0 || playerNum>=maxPlayers) {
-			return;
-		}
-		players[playerNum].setLooping(value);
-	}
-	
-	bool isPlaying(int playerNum) {
-		if(playerNum<0 || playerNum>=maxPlayers) {
-			return false;
-		}
-		return players[playerNum].isPlaying();
-	}
-	
-	void setPlaying(int playerNum, bool value) {
-		if(playerNum<0 || playerNum>=maxPlayers) {
-			return;
-		}
-		players[playerNum].setPlaying(value);
 	}
 	
 	void setFrequency(int playerNum, float value) {

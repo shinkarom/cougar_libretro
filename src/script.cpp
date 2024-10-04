@@ -115,26 +115,6 @@ namespace script {
 		return true;
 	}
 	
-	duk_ret_t apiLoadTrack(duk_context *ctx) {
-		auto playerNum = duk_require_int(ctx, -2);
-		int trackNum = duk_require_int(ctx, -1);
-		if(trackNum < 0 || trackNum >= maxAudioTracks) {
-			return 0;
-		}
-		apu::loadFile(playerNum, trackNum);
-		return 0;
-	}
-	
-	duk_ret_t apiPlayTrack(duk_context *ctx) {
-		auto playerNum = duk_require_int(ctx, -2);
-		int trackNum = duk_require_int(ctx, -1);
-		if(trackNum < 0 || trackNum >= maxAudioTracks) {
-			return 0;
-		}
-		apu::loadFile(playerNum, trackNum);
-		apu::setPlaying(playerNum, true);
-		return 0;
-	}
 	
 	duk_ret_t apiGetVolume(duk_context* ctx) {
 		auto playerNum = duk_require_int(ctx, -1);
@@ -150,19 +130,6 @@ namespace script {
 		return 0;
 	}
 	
-	duk_ret_t apiIsPlaying(duk_context* ctx) {
-		auto playerNum = duk_require_int(ctx, -1);
-		auto t = apu::isPlaying(playerNum);
-		duk_push_boolean(ctx, t);
-		return 1;
-	}
-	
-	duk_ret_t apiSetPlaying(duk_context* ctx) {
-		auto playerNum = duk_require_int(ctx, -2);
-		auto value = duk_require_boolean(ctx, -1);
-		apu::setPlaying(playerNum, value);
-		return 0;
-	}
 	
 	duk_ret_t apiClearScreen(duk_context* ctx) {
 		auto color = (uint32_t)duk_require_number(ctx, -1);
@@ -198,41 +165,6 @@ namespace script {
 			duk_push_boolean(ctx, true);
 		}
 		return 1;
-	}
-	
-	duk_ret_t apiSetTrackPosition(duk_context* ctx) {
-		auto playerNum = duk_require_int(ctx, -2);
-		auto value = duk_require_int(ctx, -1);
-		apu::setPosition(playerNum, value);
-		return 0;
-	}
-	
-	duk_ret_t apiGetTrackPosition(duk_context* ctx) {
-		auto playerNum = duk_require_int(ctx, -1);
-		auto t = apu::getPosition(playerNum);
-		duk_push_int(ctx, t);
-		return 1;
-	}
-	
-	duk_ret_t apiTrackLength(duk_context*ctx) {
-		auto playerNum = duk_require_int(ctx, -1);
-		auto l = apu::trackLength(playerNum);
-		duk_push_int(ctx, l);
-		return 1;
-	}
-	
-	duk_ret_t apiIsLooping(duk_context* ctx) {
-		auto playerNum = duk_require_int(ctx, -1);
-		auto t = apu::isLooping(playerNum);
-		duk_push_boolean(ctx, t);
-		return 1;
-	}
-	
-	duk_ret_t apiSetLooping(duk_context* ctx) {
-		auto playerNum = duk_require_int(ctx, -2);
-		auto value = duk_to_boolean(ctx, -1);
-		apu::setLooping(playerNum, value);
-		return 0;
 	}
 	
 	duk_ret_t apiGetFrequency(duk_context* ctx) {
@@ -280,18 +212,10 @@ namespace script {
 	
 	void addApi() {
 		const duk_function_list_entry cougarApi[] = {
-			{"LOADTRACK", apiLoadTrack, 2},
 			{"GETVOLUME", apiGetVolume, 1},
 			{"SETVOLUME", apiSetVolume, 2},
-			{"GETTRACKPOSITION", apiGetTrackPosition, 1},
-			{"SETTRACKPOSITION", apiSetTrackPosition, 2},
-			{"TRACKLENGTH", apiTrackLength, 1},
-			{"ISLOOPING", apiIsLooping, 1},
-			{"SETLOOPING", apiSetLooping, 2},
 			{"GETTILEMAPTILE", apiGetTilemapTile, 2},
 			{"SETTILEMAPTILE", apiSetTilemapTile, 3},
-			{"GETFREQUENCY", apiGetFrequency, 1},
-			{"SETFREQUENCY", apiSetFrequency, 2},
 			{nullptr, nullptr, 0}
 		};
 		
@@ -305,9 +229,6 @@ namespace script {
 	
 	void addApi2() {
 		const duk_function_list_entry cougarApi[] = {
-			{"PLAYTRACK", apiPlayTrack, 2},
-			{"ISPLAYING", apiIsPlaying, 1},
-			{"SETPLAYING", apiSetPlaying, 2},
 			{"GETFREQUENCY", apiGetFrequency, 1},
 			{"SETFREQUENCY", apiSetFrequency, 2},
 			{"CLEAR", apiClearScreen, 1},

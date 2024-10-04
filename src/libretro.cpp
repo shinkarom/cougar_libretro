@@ -18,7 +18,6 @@
 #include "input.h"
 #include "ppu.h"
 #include "apu.h"
-#include "stb_vorbis.h"
 
 static uint32_t *frameBuf;
 static struct retro_log_callback logging;

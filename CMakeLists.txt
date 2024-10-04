@@ -9,7 +9,6 @@ add_library(${LIBNAME} SHARED
     src/libretro.cpp
 	src/miniphysfs.cpp
 	src/duktape/duktape.c
-	src/stb_vorbis.c
 	src/stb_image.c
 	src/fs.cpp
 	src/script.cpp
