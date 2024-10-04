@@ -10,6 +10,7 @@ Player::Player() {
 	volume = 10;
 	frequency = 0;
 	phase = 0;
+	waveform = SINE;
 }
 
 Player::~Player() {
@@ -22,7 +23,26 @@ bool Player::process() {
         return false; // If not playing, simply return
     } else {
         for (size_t i = 0; i < samplesPerTick; ++i) {
-			int16_t sample = playSine();
+			int16_t sample;
+			
+			switch(waveform) {
+				case SINE:
+					sample = playSine();
+					break;
+				case SQUARE:
+					sample = playSquare();
+					break;
+				case SAWTOOTH:
+					sample = playSawtooth();
+					break;
+				case TRIANGLE:
+					sample = playTriangle();
+					break;
+				default:
+					sample = 0;
+					break;
+			}
+			
 			
 			// Ensure the sample is within the range of int16_t
 			if (sample > INT16_MAX) {
@@ -116,4 +136,10 @@ void Player::setFrequency(float value) {
 
 float Player::getFrequency() {
 	return frequency;
+}
+
+void Player::setWaveform(WaveformType value) {
+	if(value != numWaveforms){
+		waveform = value;
+	}
 }

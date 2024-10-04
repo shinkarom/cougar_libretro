@@ -14,4 +14,5 @@ namespace apu {
 	void setVolume(int playerNum, int value);
 	void setFrequency(int playerNum, float value);
 	float getFrequency(int playerNum);
+	void setWaveform(int playerNum, int value);
 }

@@ -69,14 +69,6 @@ const outputFilePath = "./output/" + outputFileName + '.cart'; // Output .cart f
 
         }
         //----images
-        await fs.mkdir(path.join(tempFolderPath, "SND"))
-
-        const dir = await fs.promises.opendir("sounds")
-        for await (const dirent of dir) {
-            var convertLine = "ffmpeg -i sounds/" + dirent.name + " -ac 1 -ar 16000 " + path.join(tempFolderPath, "SND", require("replace-ext")(dirent.name, ".ogg"))
-            console.log(convertLine)
-            execSync(convertLine)
-        }
 
         execSync("browserify -e src/index.js -s _MAIN -o " + path.join(tempFolderPath, "PRG.js") + " -t [ babelify --presets [ @babel/preset-env ]] -t uglifyify")
 

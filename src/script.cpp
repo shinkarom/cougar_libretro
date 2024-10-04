@@ -130,6 +130,13 @@ namespace script {
 		return 0;
 	}
 	
+	duk_ret_t apiSetWaveform(duk_context* ctx) {
+		auto playerNum = duk_require_int(ctx, -2);
+		auto value = duk_require_int(ctx, -1);
+		apu::setWaveform(playerNum, value);
+		return 0;
+	}
+	
 	
 	duk_ret_t apiClearScreen(duk_context* ctx) {
 		auto color = (uint32_t)duk_require_number(ctx, -1);
@@ -214,6 +221,7 @@ namespace script {
 		const duk_function_list_entry cougarApi[] = {
 			{"GETVOLUME", apiGetVolume, 1},
 			{"SETVOLUME", apiSetVolume, 2},
+			{"SETWAVEFORM", apiSetWaveform, 2},
 			{"GETTILEMAPTILE", apiGetTilemapTile, 2},
 			{"SETTILEMAPTILE", apiSetTilemapTile, 3},
 			{nullptr, nullptr, 0}

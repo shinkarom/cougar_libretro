@@ -80,4 +80,11 @@ namespace apu {
 		return players[playerNum].getFrequency();
 	}
 	
+	void setWaveform(int playerNum, int value) {
+		if(playerNum<0 || playerNum>=maxPlayers || value >= numWaveforms || value < 0) {
+			return;
+		}
+		players[playerNum].setWaveform((WaveformType)value);
+	}
+	
 }

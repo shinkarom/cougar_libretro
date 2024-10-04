@@ -4,6 +4,14 @@
 
 #include "common.h"
 
+enum WaveformType {
+    SINE,
+    SQUARE,
+    TRIANGLE,
+    SAWTOOTH,
+	numWaveforms
+};
+
 class Player {
 	public:
 
@@ -16,6 +24,7 @@ class Player {
 		void setVolume(int value);
 		void setFrequency(float value);
 		float getFrequency();
+		void setWaveform(WaveformType value);
 		
 	private:
 		int16_t playSine();
@@ -27,4 +36,5 @@ class Player {
 		bool playing;
 		float frequency;
 		double phase;
+		WaveformType waveform;
 };
