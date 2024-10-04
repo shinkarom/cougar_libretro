@@ -23,6 +23,8 @@ class Player {
 		int64_t getLength();
 		bool isLooping();
 		void setLooping(bool value);
+		void setFrequency(float value);
+		float getFrequency();
 		
 	private:
 		int pos;
@@ -33,4 +35,5 @@ class Player {
 		int16_t buffer[samplesPerTick*2];
 		bool active;
 		bool playing;
+		float frequency;
 };

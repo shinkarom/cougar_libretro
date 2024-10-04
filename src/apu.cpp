@@ -148,4 +148,18 @@ namespace apu {
 		players[playerNum].setPlaying(value);
 	}
 	
+	void setFrequency(int playerNum, float value) {
+		if(playerNum<0 || playerNum>=maxPlayers) {
+			return;
+		}
+		players[playerNum].setFrequency(value);
+	}
+	
+	float getFrequency(int playerNum) {
+		if(playerNum<0 || playerNum>=maxPlayers) {
+			return false;
+		}
+		return players[playerNum].getFrequency();
+	}
+	
 }

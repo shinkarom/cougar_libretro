@@ -235,6 +235,20 @@ namespace script {
 		return 0;
 	}
 	
+	duk_ret_t apiGetFrequency(duk_context* ctx) {
+		auto playerNum = duk_require_int(ctx, -1);
+		auto t = apu::getFrequency(playerNum);
+		duk_push_number(ctx, t);
+		return 1;
+	}
+	
+	duk_ret_t apiSetFrequency(duk_context* ctx) {
+		auto playerNum = duk_require_int(ctx, -2);
+		auto value = duk_to_number(ctx, -1);
+		apu::setFrequency(playerNum, value);
+		return 0;
+	}
+	
 	duk_ret_t apiGetTilemapTile(duk_context* ctx) {
 		auto w = duk_require_int(ctx, -2);
 		auto h = duk_require_int(ctx, -1);
@@ -276,6 +290,8 @@ namespace script {
 			{"SETLOOPING", apiSetLooping, 2},
 			{"GETTILEMAPTILE", apiGetTilemapTile, 2},
 			{"SETTILEMAPTILE", apiSetTilemapTile, 3},
+			{"GETFREQUENCY", apiGetFrequency, 1},
+			{"SETFREQUENCY", apiSetFrequency, 2},
 			{nullptr, nullptr, 0}
 		};
 		
@@ -292,6 +308,8 @@ namespace script {
 			{"PLAYTRACK", apiPlayTrack, 2},
 			{"ISPLAYING", apiIsPlaying, 1},
 			{"SETPLAYING", apiSetPlaying, 2},
+			{"GETFREQUENCY", apiGetFrequency, 1},
+			{"SETFREQUENCY", apiSetFrequency, 2},
 			{"CLEAR", apiClearScreen, 1},
 			{"SPRITE", apiDrawSprite, 5},
 			{"BUTTONPRESSED", apiButtonPressed, 1},

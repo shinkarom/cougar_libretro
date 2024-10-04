@@ -104,3 +104,11 @@ void Player::setLooping(bool value) {
 void Player::setPlaying(bool value) {
 	playing = value;
 }
+
+void Player::setFrequency(float value) {
+	frequency = value;
+}
+
+float Player::getFrequency() {
+	return frequency;
+}
