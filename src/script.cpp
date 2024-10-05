@@ -188,6 +188,13 @@ namespace script {
 		return 0;
 	}
 	
+	duk_ret_t apiSetNote(duk_context* ctx) {
+		auto playerNum = duk_require_int(ctx, -2);
+		auto value = duk_to_int(ctx, -1);
+		apu::setNote(playerNum, value);
+		return 0;
+	}
+	
 	duk_ret_t apiGetTilemapTile(duk_context* ctx) {
 		auto w = duk_require_int(ctx, -2);
 		auto h = duk_require_int(ctx, -1);
@@ -239,6 +246,7 @@ namespace script {
 		const duk_function_list_entry cougarApi[] = {
 			{"GETFREQUENCY", apiGetFrequency, 1},
 			{"SETFREQUENCY", apiSetFrequency, 2},
+			{"SETNOTE", apiSetNote, 2},
 			{"CLEAR", apiClearScreen, 1},
 			{"SPRITE", apiDrawSprite, 5},
 			{"BUTTONPRESSED", apiButtonPressed, 1},

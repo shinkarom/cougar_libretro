@@ -61,7 +61,7 @@ bool Player::process() {
 
 int16_t Player::playSine() {
 	// Calculate the sample value
-	int16_t sample = static_cast<int16_t>(std::sin(phase) * (INT16_MAX/10*volume));
+	int16_t sample = static_cast<int16_t>(std::sin(phase) * (INT16_MAX * volume / 10.0));
 	// Increment phase for the next sample
 	phase += (2.0 * M_PI * frequency) / audioSampleRate;
 
@@ -74,7 +74,7 @@ int16_t Player::playSine() {
 }
 
 int16_t Player::playSquare() {
-    int16_t sample = (std::sin(phase) >= 0) ? (INT16_MAX /10 * volume) : (-INT16_MAX /10* volume);
+    int16_t sample = (std::sin(phase) >= 0) ? (INT16_MAX * volume / 10.0) : -(INT16_MAX * volume / 10.0);
     phase += (2.0 * M_PI * frequency) / audioSampleRate;
 
     if (phase >= 2.0 * M_PI) {
@@ -85,8 +85,8 @@ int16_t Player::playSquare() {
 }
 
 int16_t Player::playSawtooth() {
-    double normalizedSample = (phase / (2.0 * M_PI)) * 2.0 - 1.0; // Normalized range from -1 to 1
-    int16_t sample = static_cast<int16_t>(normalizedSample * (INT16_MAX/10 * volume));
+    double t = phase / (2.0 * M_PI); // Normalize phase to [0, 1]
+    int16_t sample = static_cast<int16_t>((2.0 * t - 1.0) * (INT16_MAX * volume / 10.0));
     
     phase += (2.0 * M_PI * frequency) / audioSampleRate;
 
@@ -98,8 +98,8 @@ int16_t Player::playSawtooth() {
 }
 
 int16_t Player::playTriangle() {
-    double normalizedSample = (1.0 - std::abs(2.0 * (phase / (2.0 * M_PI) - 0.5))); // Normalized triangle wave
-    int16_t sample = static_cast<int16_t>(normalizedSample * (INT16_MAX/10 * volume));
+    double t = phase / (2.0 * M_PI);
+    int16_t sample = static_cast<int16_t>((t < 0.5 ? 4 * t - 1.0 : 3.0 - 4 * t) * (INT16_MAX * volume / 10.0));
 
     phase += (2.0 * M_PI * frequency) / audioSampleRate;
 
@@ -141,5 +141,6 @@ float Player::getFrequency() {
 void Player::setWaveform(WaveformType value) {
 	if(value != numWaveforms){
 		waveform = value;
+		phase = 0;
 	}
 }

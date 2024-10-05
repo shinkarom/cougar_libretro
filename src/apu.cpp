@@ -87,4 +87,12 @@ namespace apu {
 		players[playerNum].setWaveform((WaveformType)value);
 	}
 	
+	void setNote(int playerNum, int value) {
+		if(playerNum<0 || playerNum>=maxPlayers || value >= 127 || value < 0) {
+			return;
+		}
+		
+		players[playerNum].setFrequency(440.0 * std::pow(2.0, (value - 69) / 12.0));
+	}
+	
 }
