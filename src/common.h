@@ -31,7 +31,7 @@ constexpr int tilemapHeightPixels = tilemapHeightTiles * tileHeight;
 constexpr int tilemapSizeTiles =  tilemapWidthTiles * tilemapHeightTiles;
 constexpr int ttilemapSizePixels = tilemapWidthPixels * tilemapHeightPixels;
 
-constexpr int numTilePages = 256;
+constexpr int numTilePages = 8;
 constexpr int tilesPerRow = 16;
 constexpr int tilesRowsPerPage = 16; 
 constexpr int tilePageWidth = tilesPerRow * tileWidth;

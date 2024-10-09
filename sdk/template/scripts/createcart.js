@@ -50,7 +50,7 @@ const outputFilePath = "./output/" + outputFileName + '.cart'; // Output .cart f
 
         for (const file of files) {
 			
-            if (/^CHR_[0-9A-Fa-f]{2}\.png$/.test(file)) {
+            if (/^CHR_[0-7]\.png$/.test(file)) {
 				
                 const filePath = path.join("tiles", file);
                 try {

@@ -30,7 +30,7 @@ namespace ppu {
 		
 		for(int pageNum = 0; pageNum < numTilePages; pageNum++) {
 			char pageName[80];
-			sprintf(pageName, "/CHR/CHR_%02X.png", pageNum);
+			sprintf(pageName, "/CHR/CHR_%01X.png", pageNum);
 			auto fileSize = fs::size(pageName);		
 			int loadSize = (fileSize > pageSizeBytes) ? pageSizeBytes : fileSize;
 			
