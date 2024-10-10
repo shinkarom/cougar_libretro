@@ -8,7 +8,7 @@ namespace apu {
 	void init();
 	void deinit();
 	
-	uint16_t* process();
+	int16_t* process();
 	
 	int getVolume(int playerNum);
 	void setVolume(int playerNum, int value);

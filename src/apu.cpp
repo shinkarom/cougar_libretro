@@ -10,10 +10,8 @@
 #include "audioplayer.h"
 
 namespace apu {	
-
-	constexpr int sqrs[4] = {100, 141, 173, 200};
 	
-	static uint16_t buffer[samplesPerTick*2];
+	static int16_t buffer[samplesPerTick*2];
 	int pos;
 	Player players[maxPlayers];
 	
@@ -28,26 +26,27 @@ namespace apu {
 		
 	}
 	
-	uint16_t* process() {
-		memset(buffer, 0, samplesPerTick * 2);
-		int64_t sample = 0;
-		int playings = 0;
-		for (int i = 0; i<maxPlayers; i++) {
-			if(players[i].process()) {
-				playings++;
-			}
-		}
-		for(int s = 0; s<samplesPerTick*2; s++) {
+	int16_t* process() {
+		memset(buffer, 0, samplesPerTick * sizeof(int16_t) * 2);
+		float sample = 0;
+		for(int s = 0; s<samplesPerTick; s++) {
 			sample = 0;
 			for (int i = 0; i<maxPlayers; i++) {
-				if(players[i].isPlaying()) {
-					sample += players[i].getBuffer()[s];
-				}
+				float cursample = players[i].tick();
+				cursample = cursample * (players[i].getVolume()/10.0);
+				sample += cursample;
 			}
-			sample = sample * 100 / sqrs[playings];
-			buffer[s] = (int16_t)sample;
+			if(sample>1.0){
+				sample = 1.0;
+			} else if (sample < -1.0) {
+				sample = -1.0;
+			}
+			uint16_t finalsample = (int16_t)(std::round(sample*INT16_MAX));
+			buffer[s*2] = finalsample;
+			buffer[s*2+1] = finalsample;
+			//std::cout<<finalsample<<std::endl;
 		}
-				
+		//std::cout<<"---"<<std::endl;		
 		return buffer;
 	}
 	

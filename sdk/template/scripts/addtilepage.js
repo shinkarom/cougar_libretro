@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 function findAvailableNumber() {
-  for (let i = 0; i <= 0xFF; i++) {
+  for (let i = 0; i <= 0x7; i++) {
     const hexNumber = i.toString(16).padStart(1, '0');
     const fileName = `CHR_${hexNumber}.png`;
     const filePath = path.join('tiles', fileName);
