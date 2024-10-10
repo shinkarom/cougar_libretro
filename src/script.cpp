@@ -116,18 +116,28 @@ namespace script {
 	}
 	
 	
-	duk_ret_t apiGetVolume(duk_context* ctx) {
-		auto playerNum = duk_require_int(ctx, -1);
-		int t = apu::getVolume(playerNum);
-		duk_push_int(ctx, t);
-		return 1;
-	}
-	
-	duk_ret_t apiSetVolume(duk_context* ctx) {
-		auto playerNum = duk_require_int(ctx, -2);
-		auto value = duk_require_int(ctx, -1);
-		apu::setVolume(playerNum, value);
-		return 0;
+	duk_ret_t apiVolume(duk_context* ctx) {
+		int numArgs = duk_get_top(ctx); // Get the number of arguments passed
+
+		if (numArgs == 1) {
+			// One argument: get volume
+			auto playerNum = duk_require_int(ctx, -1);
+			int t = apu::getVolume(playerNum);
+			duk_push_int(ctx, t);
+			return 1;
+		} 
+		else if (numArgs == 2) {
+			// Two arguments: set volume
+			auto playerNum = duk_require_int(ctx, -2); // Get the first argument
+			int value = duk_require_int(ctx, -1); // Get the second argument
+			apu::setVolume(playerNum, value); // Set the new volume
+			return 0; // No return value needed for a setter
+		} 
+		else {
+			// Throw an error if the number of arguments is not 1 or 2
+			duk_push_error_object(ctx, DUK_ERR_TYPE_ERROR, "Expected 1 or 2 arguments, got %d", numArgs);
+			return DUK_RET_ERROR; // Return an error
+		}
 	}
 	
 	duk_ret_t apiSetWaveform(duk_context* ctx) {
@@ -174,18 +184,28 @@ namespace script {
 		return 1;
 	}
 	
-	duk_ret_t apiGetFrequency(duk_context* ctx) {
-		auto playerNum = duk_require_int(ctx, -1);
-		auto t = apu::getFrequency(playerNum);
-		duk_push_number(ctx, t);
-		return 1;
-	}
-	
-	duk_ret_t apiSetFrequency(duk_context* ctx) {
-		auto playerNum = duk_require_int(ctx, -2);
-		auto value = duk_to_number(ctx, -1);
-		apu::setFrequency(playerNum, value);
-		return 0;
+	duk_ret_t apiFrequency(duk_context* ctx) {
+		int numArgs = duk_get_top(ctx); // Get the number of arguments passed
+
+		if (numArgs == 1) {
+			// One argument: get frequency
+			auto playerNum = duk_require_int(ctx, -1); // Get the player number
+			auto t = apu::getFrequency(playerNum); // Retrieve the frequency
+			duk_push_number(ctx, t); // Push the frequency onto the stack
+			return 1; // Return the frequency value
+		} 
+		else if (numArgs == 2) {
+			// Two arguments: set frequency
+			auto playerNum = duk_require_int(ctx, -2); // Get the player number
+			auto value = duk_require_number(ctx, -1); // Get the frequency value to set
+			apu::setFrequency(playerNum, value); // Set the frequency
+			return 0; // No return value needed for a setter
+		} 
+		else {
+			// Throw an error if the number of arguments is not 1 or 2
+			duk_push_error_object(ctx, DUK_ERR_TYPE_ERROR, "Expected 1 or 2 arguments, got %d", numArgs);
+			return DUK_RET_ERROR; // Return an error
+		}
 	}
 	
 	duk_ret_t apiSetNote(duk_context* ctx) {
@@ -195,21 +215,32 @@ namespace script {
 		return 0;
 	}
 	
-	duk_ret_t apiGetTilemapTile(duk_context* ctx) {
-		auto w = duk_require_int(ctx, -2);
-		auto h = duk_require_int(ctx, -1);
-		auto t = ppu::getTilemapTile(w, h);
-		duk_push_int(ctx, t);
-		return 1;
+	duk_ret_t apiTilemapTile(duk_context* ctx) {
+		int numArgs = duk_get_top(ctx); // Get the number of arguments passed
+
+		if (numArgs == 2) {
+			// Two arguments: get tile
+			auto w = duk_require_int(ctx, -2); // Get the width
+			auto h = duk_require_int(ctx, -1); // Get the height
+			auto t = ppu::getTilemapTile(w, h); // Retrieve the tile value
+			duk_push_int(ctx, t); // Push the tile value onto the stack
+			return 1; // Return the tile value
+		} 
+		else if (numArgs == 3) {
+			// Three arguments: set tile
+			auto w = duk_require_int(ctx, -3); // Get the width
+			auto h = duk_require_int(ctx, -2); // Get the height
+			auto value = duk_require_int(ctx, -1); // Get the tile value to set
+			ppu::setTilemapTile(w, h, value); // Set the tile value
+			return 0; // No return value needed for a setter
+		} 
+		else {
+			// Throw an error if the number of arguments is not 2 or 3
+			duk_push_error_object(ctx, DUK_ERR_TYPE_ERROR, "Expected 2 or 3 arguments, got %d", numArgs);
+			return DUK_RET_ERROR; // Return an error
+		}
 	}
 	
-	duk_ret_t apiSetTilemapTile(duk_context* ctx) {
-		auto w = duk_require_int(ctx, -3);
-		auto h = duk_require_int(ctx, -2);
-		auto value = duk_require_int(ctx, -1);
-		ppu::setTilemapTile(w, h, value);
-		return 0;
-	}
 	
 	duk_ret_t apiDrawTilemap(duk_context* ctx) {
 		auto sx = duk_require_int(ctx, -6);
@@ -221,16 +252,12 @@ namespace script {
 		ppu::drawTilemap(sx, sy, x, y, w, h);
 		return 0;
 	}
-	
-	
-	
+		
 	void addApi() {
 		const duk_function_list_entry cougarApi[] = {
-			{"GETVOLUME", apiGetVolume, 1},
-			{"SETVOLUME", apiSetVolume, 2},
+			{"VOLUME", apiVolume, DUK_VARARGS},
 			{"SETWAVEFORM", apiSetWaveform, 2},
-			{"GETTILEMAPTILE", apiGetTilemapTile, 2},
-			{"SETTILEMAPTILE", apiSetTilemapTile, 3},
+			{"TILEMAPTILE", apiTilemapTile, DUK_VARARGS},
 			{nullptr, nullptr, 0}
 		};
 		
@@ -244,8 +271,7 @@ namespace script {
 	
 	void addApi2() {
 		const duk_function_list_entry cougarApi[] = {
-			{"GETFREQUENCY", apiGetFrequency, 1},
-			{"SETFREQUENCY", apiSetFrequency, 2},
+			{"FREQUENCY", apiFrequency, DUK_VARARGS},
 			{"SETNOTE", apiSetNote, 2},
 			{"CLEAR", apiClearScreen, 1},
 			{"SPRITE", apiDrawSprite, 5},

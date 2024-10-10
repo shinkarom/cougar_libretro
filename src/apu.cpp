@@ -33,7 +33,8 @@ namespace apu {
 			sample = 0;
 			for (int i = 0; i<maxPlayers; i++) {
 				float cursample = players[i].tick();
-				cursample = cursample * (players[i].getVolume()/10.0);
+				//std::cout<<"<"<<cursample<<" "<<players[i].getVolume()<<std::endl;
+				cursample = cursample * players[i].getVolume();
 				sample += cursample;
 			}
 			if(sample>1.0){
@@ -41,10 +42,11 @@ namespace apu {
 			} else if (sample < -1.0) {
 				sample = -1.0;
 			}
+			//std::cout<<sample<<std::endl;
 			uint16_t finalsample = (int16_t)(std::round(sample*INT16_MAX));
 			buffer[s*2] = finalsample;
 			buffer[s*2+1] = finalsample;
-			//std::cout<<finalsample<<std::endl;
+			std::cout<<(int16_t)(finalsample)<<">"<<std::endl;
 		}
 		//std::cout<<"---"<<std::endl;		
 		return buffer;
@@ -59,10 +61,11 @@ namespace apu {
 	}
 
 	void setVolume(int playerNum, int value) {
-		if(playerNum<0 || playerNum>=maxPlayers) {
+		if(playerNum<0 || playerNum>=maxPlayers || value < 0 || value>maxVolume) {
 			return;
 		}
-		players[playerNum].setVolume(value);
+		players[playerNum].setVolume(value*1.0/maxVolume);
+		std::cout<<players[playerNum].getVolume()<<std::endl;
 	}
 	
 	void setFrequency(int playerNum, float value) {

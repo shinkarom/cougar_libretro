@@ -9,6 +9,7 @@ constexpr auto audioSampleRate = 44100;
 constexpr auto samplesPerTick = audioSampleRate / fps;
 constexpr auto maxPlayers = 4;
 constexpr auto maxAudioTracks = 0xFFFF + 1;
+constexpr auto maxVolume = 100;
 	
 constexpr int tileWidth = 8;
 constexpr int tileHeight = 8;

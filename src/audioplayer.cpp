@@ -7,7 +7,7 @@
 
 Player::Player() {
 	playing = false;
-	volume = 10;
+	volume = 1.0;
 	frequency = 0;
 	phase = 0;
 	waveform = SINE;
@@ -77,12 +77,12 @@ bool Player::isPlaying() {
 	return playing;
 }
 
-int Player::getVolume() {
+float Player::getVolume() {
 	return volume;
 }
 
-void Player::setVolume(int value) {
-	if(value <0 || value > 10) {
+void Player::setVolume(float value) {
+	if(value <0 || value > 1.00) {
 		return;
 	}
 	volume = value;

@@ -19,8 +19,8 @@ class Player {
 		~Player();
 		float tick();
 		bool isPlaying();
-		int getVolume();
-		void setVolume(int value);
+		float getVolume();
+		void setVolume(float value);
 		void setFrequency(float value);
 		float getFrequency();
 		void setWaveform(WaveformType value);
@@ -31,7 +31,7 @@ class Player {
 		float playSawtooth();
 		float playTriangle();
 		void updatePhase();
-		int volume;
+		float volume;
 		bool playing;
 		float frequency;
 		double phase;
