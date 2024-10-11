@@ -116,53 +116,6 @@ namespace script {
 	}
 	
 	
-	duk_ret_t apiVolume(duk_context* ctx) {
-		int numArgs = duk_get_top(ctx); // Get the number of arguments passed
-
-		if (numArgs == 1) {
-			// One argument: get volume
-			auto playerNum = duk_require_int(ctx, -1);
-			float t = apu::getVolume(playerNum);
-			duk_push_number(ctx, t);
-			return 1;
-		} 
-		else if (numArgs == 2) {
-			// Two arguments: set volume
-			auto playerNum = duk_require_int(ctx, -2); // Get the first argument
-			float value = duk_require_number(ctx, -1); // Get the second argument
-			apu::setVolume(playerNum, value); // Set the new volume
-			return 0; // No return value needed for a setter
-		} 
-		else {
-			// Throw an error if the number of arguments is not 1 or 2
-			duk_push_error_object(ctx, DUK_ERR_TYPE_ERROR, "Expected 1 or 2 arguments, got %d", numArgs);
-			return DUK_RET_ERROR; // Return an error
-		}
-	}
-	
-	duk_ret_t apiWaveform(duk_context* ctx) {
-		int numArgs = duk_get_top(ctx); // Get the number of arguments passed
-
-		if (numArgs == 1) {
-			auto playerNum = duk_require_int(ctx, -1);
-			auto value = apu::getWaveform(playerNum);
-			duk_push_int(ctx, value);
-			return 1;
-		}
-		else if (numArgs == 2) {
-			auto playerNum = duk_require_int(ctx, -2);
-			auto value = duk_require_int(ctx, -1);
-			apu::setWaveform(playerNum, value);
-			return 0;
-		} 
-		else {
-			// Throw an error if the number of arguments is not 1 or 2
-			duk_push_error_object(ctx, DUK_ERR_TYPE_ERROR, "Expected 1 or 2 arguments, got %d", numArgs);
-			return DUK_RET_ERROR; // Return an error
-		}
-	}
-	
-	
 	duk_ret_t apiClearScreen(duk_context* ctx) {
 		auto color = (uint32_t)duk_require_number(ctx, -1);
 		ppu::clearScreen(color);
@@ -199,37 +152,6 @@ namespace script {
 		return 1;
 	}
 	
-	duk_ret_t apiFrequency(duk_context* ctx) {
-		int numArgs = duk_get_top(ctx); // Get the number of arguments passed
-
-		if (numArgs == 1) {
-			// One argument: get frequency
-			auto playerNum = duk_require_int(ctx, -1); // Get the player number
-			auto t = apu::getFrequency(playerNum); // Retrieve the frequency
-			duk_push_number(ctx, t); // Push the frequency onto the stack
-			return 1; // Return the frequency value
-		} 
-		else if (numArgs == 2) {
-			// Two arguments: set frequency
-			auto playerNum = duk_require_int(ctx, -2); // Get the player number
-			auto value = duk_require_number(ctx, -1); // Get the frequency value to set
-			apu::setFrequency(playerNum, value); // Set the frequency
-			return 0; // No return value needed for a setter
-		} 
-		else {
-			// Throw an error if the number of arguments is not 1 or 2
-			duk_push_error_object(ctx, DUK_ERR_TYPE_ERROR, "Expected 1 or 2 arguments, got %d", numArgs);
-			return DUK_RET_ERROR; // Return an error
-		}
-	}
-	
-	duk_ret_t apiNote(duk_context* ctx) {
-		auto playerNum = duk_require_int(ctx, -2);
-		auto value = duk_to_int(ctx, -1);
-		apu::setNote(playerNum, value);
-		return 0;
-	}
-	
 	duk_ret_t apiTilemapTile(duk_context* ctx) {
 		int numArgs = duk_get_top(ctx); // Get the number of arguments passed
 
@@ -255,7 +177,16 @@ namespace script {
 			return DUK_RET_ERROR; // Return an error
 		}
 	}
-	
+
+
+	duk_ret_t apiWriteReg(duk_context* ctx) {
+		auto reg = duk_require_int(ctx, -2);
+		auto value = duk_require_int(ctx, -1);
+		if(reg>0 || reg < UINT16_MAX || value > 0 && value < UINT8_MAX) {
+			apu::writeReg(reg, value);
+		}
+		return 0;
+	}
 	
 	duk_ret_t apiDrawTilemap(duk_context* ctx) {
 		auto sx = duk_require_int(ctx, -6);
@@ -270,9 +201,8 @@ namespace script {
 		
 	void addApi() {
 		const duk_function_list_entry cougarApi[] = {
-			{"VOLUME", apiVolume, DUK_VARARGS},
-			{"WAVEFORM", apiWaveform, 2},
 			{"TILE", apiTilemapTile, DUK_VARARGS},
+			{"REG", apiWriteReg, 2},
 			{nullptr, nullptr, 0}
 		};
 		
@@ -286,8 +216,6 @@ namespace script {
 	
 	void addApi2() {
 		const duk_function_list_entry cougarApi[] = {
-			{"FREQUENCY", apiFrequency, DUK_VARARGS},
-			{"NOTE", apiNote, 2},
 			{"CLEAR", apiClearScreen, 1},
 			{"SPRITE", apiDrawSprite, 5},
 			{"PRESSED", apiButtonPressed, 1},

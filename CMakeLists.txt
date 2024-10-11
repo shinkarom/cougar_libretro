@@ -9,13 +9,13 @@ add_library(${LIBNAME} SHARED
     src/libretro.cpp
 	src/miniphysfs.cpp
 	src/duktape/duktape.c
+	src/opl3.c
 	src/stb_image.c
 	src/fs.cpp
 	src/script.cpp
 	src/input.cpp
 	src/ppu.cpp
 	src/apu.cpp
-	src/audioplayer.cpp
     )
 set_target_properties(${LIBNAME} PROPERTIES
     SOVERSION 1
