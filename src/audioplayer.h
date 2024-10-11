@@ -17,19 +17,21 @@ class Player {
 
 		Player();
 		~Player();
-		float tick();
+		double tick();
 		bool isPlaying();
 		float getVolume();
 		void setVolume(float value);
 		void setFrequency(float value);
 		float getFrequency();
 		void setWaveform(WaveformType value);
+		WaveformType getWaveform();
 		
 	private:
-		float playSine();
-		float playSquare();
-		float playSawtooth();
-		float playTriangle();
+		double playSine();
+		double playSquare();
+		double playSawtooth();
+		double playTriangle();
+		double playNoise();
 		void updatePhase();
 		float volume;
 		bool playing;

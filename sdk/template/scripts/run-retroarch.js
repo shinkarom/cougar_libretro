@@ -1,14 +1,9 @@
 const { spawn } = require('child_process');
 const path = require('path');
 
-// Ensure a file path is provided
-if (process.argv.length < 3) {
-    console.error('Please provide the path to the file you want to run.');
-    process.exit(1);
-}
-
+projectName = require("../package.json").name
 // Get the file path from the command line arguments
-const fileToRun = "output\\"+process.argv[2]+".cart";
+const fileToRun = "output\\"+projectName+".cart";
 console.log(fileToRun)
 // Define the path to the RetroArch executable
 const retroArchPath = 'C:\\Program Files\\RetroArch\\retroarch.exe'; // Windows

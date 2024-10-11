@@ -6,7 +6,7 @@ const browserify = require("browserify")
 const execSync = require("child_process").execSync
 const PNG = require('pngjs').PNG;
 
-const outputFileName = process.argv[2] || "output";
+const outputFileName = require("../package.json").name
 
 const outputFilePath = "./output/" + outputFileName + '.cart'; // Output .cart file name
 

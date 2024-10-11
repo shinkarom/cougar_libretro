@@ -122,14 +122,14 @@ namespace script {
 		if (numArgs == 1) {
 			// One argument: get volume
 			auto playerNum = duk_require_int(ctx, -1);
-			int t = apu::getVolume(playerNum);
-			duk_push_int(ctx, t);
+			float t = apu::getVolume(playerNum);
+			duk_push_number(ctx, t);
 			return 1;
 		} 
 		else if (numArgs == 2) {
 			// Two arguments: set volume
 			auto playerNum = duk_require_int(ctx, -2); // Get the first argument
-			int value = duk_require_int(ctx, -1); // Get the second argument
+			float value = duk_require_number(ctx, -1); // Get the second argument
 			apu::setVolume(playerNum, value); // Set the new volume
 			return 0; // No return value needed for a setter
 		} 
@@ -140,11 +140,26 @@ namespace script {
 		}
 	}
 	
-	duk_ret_t apiSetWaveform(duk_context* ctx) {
-		auto playerNum = duk_require_int(ctx, -2);
-		auto value = duk_require_int(ctx, -1);
-		apu::setWaveform(playerNum, value);
-		return 0;
+	duk_ret_t apiWaveform(duk_context* ctx) {
+		int numArgs = duk_get_top(ctx); // Get the number of arguments passed
+
+		if (numArgs == 1) {
+			auto playerNum = duk_require_int(ctx, -1);
+			auto value = apu::getWaveform(playerNum);
+			duk_push_int(ctx, value);
+			return 1;
+		}
+		else if (numArgs == 2) {
+			auto playerNum = duk_require_int(ctx, -2);
+			auto value = duk_require_int(ctx, -1);
+			apu::setWaveform(playerNum, value);
+			return 0;
+		} 
+		else {
+			// Throw an error if the number of arguments is not 1 or 2
+			duk_push_error_object(ctx, DUK_ERR_TYPE_ERROR, "Expected 1 or 2 arguments, got %d", numArgs);
+			return DUK_RET_ERROR; // Return an error
+		}
 	}
 	
 	
@@ -208,7 +223,7 @@ namespace script {
 		}
 	}
 	
-	duk_ret_t apiSetNote(duk_context* ctx) {
+	duk_ret_t apiNote(duk_context* ctx) {
 		auto playerNum = duk_require_int(ctx, -2);
 		auto value = duk_to_int(ctx, -1);
 		apu::setNote(playerNum, value);
@@ -256,8 +271,8 @@ namespace script {
 	void addApi() {
 		const duk_function_list_entry cougarApi[] = {
 			{"VOLUME", apiVolume, DUK_VARARGS},
-			{"SETWAVEFORM", apiSetWaveform, 2},
-			{"TILEMAPTILE", apiTilemapTile, DUK_VARARGS},
+			{"WAVEFORM", apiWaveform, 2},
+			{"TILE", apiTilemapTile, DUK_VARARGS},
 			{nullptr, nullptr, 0}
 		};
 		
@@ -272,12 +287,12 @@ namespace script {
 	void addApi2() {
 		const duk_function_list_entry cougarApi[] = {
 			{"FREQUENCY", apiFrequency, DUK_VARARGS},
-			{"SETNOTE", apiSetNote, 2},
+			{"NOTE", apiNote, 2},
 			{"CLEAR", apiClearScreen, 1},
 			{"SPRITE", apiDrawSprite, 5},
-			{"BUTTONPRESSED", apiButtonPressed, 1},
-			{"BUTTONRELEASED", apiButtonReleased, 1},
-			{"DRAWTILEMAP", apiDrawTilemap, 6},
+			{"PRESSED", apiButtonPressed, 1},
+			{"RELEASED", apiButtonReleased, 1},
+			{"MAP", apiDrawTilemap, 6},
 			{nullptr, nullptr, 0}
 		};
 		

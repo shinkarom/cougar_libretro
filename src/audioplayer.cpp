@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <cmath>
+#include <random>
 
 Player::Player() {
 	playing = false;
@@ -17,7 +18,7 @@ Player::~Player() {
 	
 }
 
-float Player::tick() {
+double Player::tick() {
 	if (!playing || !frequency) {
         return 0; // If not playing, simply return
     }
@@ -43,25 +44,25 @@ float Player::tick() {
 	return sample;
 }
 
-float Player::playSine() {
-	float sample = std::sin(phase);	
+double Player::playSine() {
+	double sample = std::sin(phase);	
 	return sample;
 }
 
-float Player::playSquare() {
-    float sample = (std::sin(phase) >= 0) ? 1.0 : -1.0;
+double Player::playSquare() {
+    double sample = (phase < M_PI) ? 1.0 : -1.0;
     return sample;
 }
 
-float Player::playSawtooth() {
+double Player::playSawtooth() {
     double t = phase / (2.0 * M_PI);
-    float sample = (2.0 * t - 1.0);
+    double sample = (2.0 * t - 1.0);
     return sample;
 }
 
-float Player::playTriangle() {
+double Player::playTriangle() {
     double t = phase / (2.0 * M_PI);
-    float sample = (t < 0.5 ? 4 * t - 1.0 : 3.0 - 4 * t);	
+    double sample = (t < 0.5) ? (4 * t - 1.0) : (3.0 - 4 * t);	
     return sample;
 }
 
@@ -82,7 +83,7 @@ float Player::getVolume() {
 }
 
 void Player::setVolume(float value) {
-	if(value <0 || value > 1.00) {
+	if(value <0 || value > maxVolume) {
 		return;
 	}
 	volume = value;
@@ -102,4 +103,8 @@ void Player::setWaveform(WaveformType value) {
 		waveform = value;
 		phase = 0;
 	}
+}
+
+WaveformType Player::getWaveform() {
+	return waveform;
 }
