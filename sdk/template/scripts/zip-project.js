@@ -2,7 +2,7 @@ const fs = require('fs');
 const archiver = require('archiver');
 
 const sourceFolder = './'; // Path to your project folder
-const outputFileName = process.argv[2] || "project";
+const outputFileName = require("../package.json").name
 const outputFilePath = "./output/"+outputFileName+'.zip';
 
 const archive = archiver('zip', { zlib: { level: 9 } }); // Create a zip archive
