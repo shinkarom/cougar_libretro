@@ -94,3 +94,7 @@ I use `pnpm` build system, and I will demonstrate on it.
 `pnpm run build` to create the output cartridge in the `output` folder (you should create the folder manually beforehand). The file name is determined by `name` field  `package.json`.
 
 If at `scripts/run-retroarch.js` you put in the commands to run RetroArch and the path to the core file, `pnpm run run` will run the cartridge from there.
+
+## Credits
+
+Made in 2024 by Roman "shinkarom" Shynkarenko (https://shinkarom.github.io).
