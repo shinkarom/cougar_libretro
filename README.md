@@ -80,3 +80,17 @@ Copy the info file:
 ```
 copy bin\cougar_libretro.info "C:\Program Files\RetroArch\info\"
 ```
+
+## Creating Games
+
+Copy and rename the `sdk/template` folder. The `help.txt` file provides documentation.
+
+I use `pnpm` build system, and I will demonstrate on it.
+
+`pnpm install` to install the prerequisites.
+
+`src` folder holds the source code, `tiles` folder the tiles.
+
+`pnpm run build` to create the output cartridge in the `output` folder (you should create the folder manually beforehand). The file name is determined by `name` field  `package.json`.
+
+If at `scripts/run-retroarch.js` you put in the commands to run RetroArch and the path to the core file, `pnpm run run` will run the cartridge from there.
