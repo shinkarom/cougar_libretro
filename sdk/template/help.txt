@@ -12,3 +12,18 @@ TILE -> x, y -> get the tilemap tile from coordinates x and y
 TILE -> x, y, value -> set the tilemap tile at coordinates x and y to value
 SPRITE -> index, x, y, fliph, flipv -> draw sprite with index, at x and y, fliph sets whether to flip it horizontally, flipv is whether to flip it vertically
 REG -> reg, value -> write value into audio register reg
+
+
+buttons:
+0 - Up
+1 - Down
+2 - Left
+3 - Right
+4 - A
+5 - B
+6 - Select
+7 - Start
+8 - X
+9 - Y
+10 - L
+11 - R
