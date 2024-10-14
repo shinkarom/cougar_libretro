@@ -95,6 +95,8 @@ I use `pnpm` build system, and I will demonstrate on it.
 
 If at `scripts/run-retroarch.js` you put in the commands to run RetroArch and the path to the core file, `pnpm run run` will run the cartridge from there.
 
+`pnpm run zip` will zip the project folder and place it into `output` folder.
+
 ## Credits
 
 Made in 2024 by Roman "shinkarom" Shynkarenko (https://shinkarom.github.io).

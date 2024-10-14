@@ -13,11 +13,15 @@ namespace ppu {
 	int windowHeight = maxScreenHeightPixels;
 	int windowTotalPixels = windowWidth * windowHeight;
 	
+	int pixelsQuota = windowTotalPixels * 3 / 2;
+	
 	uint32_t tiles[totalTilesSizeBytes];
 	uint16_t tilemap[tilemapSizeTiles];	
 	
 	int screenWidthTiles = maxScreenWidthTiles;
 	int screenHeightTiles = maxScreenHeightTiles;
+	
+	int drawnPixels;
 	
 	set_resolution_t resolution_cb;
 	
@@ -100,6 +104,10 @@ namespace ppu {
 		
 	}
 	
+	void beforeProcess() {
+		drawnPixels = 0;
+	}
+	
 	void process() {
 		
 	}
@@ -114,6 +122,7 @@ namespace ppu {
 		windowWidth = w * tileWidth;
 		windowHeight = h * tileHeight;
 		windowTotalPixels = windowWidth * windowHeight;
+		pixelsQuota = windowTotalPixels * 3 / 2;
 		
 		screenWidthTiles = w;
 		screenHeightTiles = h;
@@ -121,6 +130,9 @@ namespace ppu {
 	}
 	
 	void drawSprite(int index, int x, int y, bool fliph, bool flipv) {
+		if(drawnPixels >= pixelsQuota) {
+			return;
+		}
 		for(int yy = 0; yy < tileHeight; yy++) {
 			if(y+yy < 0) {
 				continue;
@@ -139,6 +151,10 @@ namespace ppu {
 				int tileStart = index * tileSizePixels +yFactor*tileWidth+xFactor;
 				if(tiles[tileStart] & 0xFF000000) {
 					(*frameBuf)[pixelIndex] = tiles[tileStart];
+					drawnPixels++;
+					if(drawnPixels >= pixelsQuota) {
+						return;
+					}
 				}	
 			}
 		}
@@ -169,6 +185,9 @@ namespace ppu {
 	
 	void drawTilemap(int sx, int sy, int x, int y, int w, int h) {
 		if(sx < 0 || sx >= tilemapWidthTiles || sy < 0 || sy >= tilemapHeightTiles) {
+			return;
+		}
+		if(drawnPixels >= pixelsQuota) {
 			return;
 		}
 		//if(x < 0 || x >= windowWidth || y < 0 || y>= windowHeight) {
@@ -212,6 +231,10 @@ namespace ppu {
 				// draw it
 				if(pixel & 0xFF000000) {
 					(*frameBuf)[pixelPos] = pixel;
+					drawnPixels++;
+					if(drawnPixels >= pixelsQuota) {
+						return;
+					}
 				}
 			}
 		}

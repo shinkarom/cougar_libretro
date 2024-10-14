@@ -229,6 +229,8 @@ void retro_run(void)
 {
    update_input();
 	
+	ppu::beforeProcess();
+	
 	if(!script::callVBlank()) {
 		environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, nullptr);
 	}	

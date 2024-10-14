@@ -17,6 +17,7 @@ namespace ppu {
 	void loadTiles();
 	
 	void process();
+	void beforeProcess();
 	
 	void setResolution(int w, int h);
 	void drawSprite(int index, int x, int y, bool fliph, bool flipv);
