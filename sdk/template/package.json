@@ -6,7 +6,7 @@
   "scripts": {
     "build": "node scripts/createCart.js",
     "maps": "node scripts/processmaps.js",
-    "addtilepage": "node scripts/addtilepage.js",
+    "tilepages": "node scripts/tilepages.js",
     "zip": "node scripts/zip-project.js",
     "run": "node scripts/run-retroarch.js"
   },
