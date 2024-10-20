@@ -1,4 +1,4 @@
-_CONFIG = {WIDTH: 8, HEIGHT: 8}
+_CONFIG = {WIDTH: 15, HEIGHT: 14}
 
 function _INIT() {
 	

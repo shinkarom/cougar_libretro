@@ -7,6 +7,7 @@
 #include "input.h"
 
 #include <iostream>
+#include <cstring>
 
 namespace script {
 	
