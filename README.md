@@ -1,5 +1,7 @@
 # cougar-libretro
 
+![Bouncingball project](images/bball.jpg)
+
 **Cougar** is a fantasy console, inspired by Nintendo Entertainment System. It is a libretro core.
 
 ## Features
