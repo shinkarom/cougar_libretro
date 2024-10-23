@@ -63,6 +63,7 @@ namespace ppu {
 			auto pixels = (uint32_t*)data;
 	
 			for(auto pxn = 0; pxn < pageSizePixels; pxn++) {
+				
 				auto px = pixels[pxn];
 				
 				auto alpha = (px>>24)&0xFF;
@@ -81,11 +82,11 @@ namespace ppu {
 				auto pixelY = baseY % tileHeight;
 				
 				auto newTilePos = pixelY * tileWidth + pixelX;
-				auto newTileIndex = tileY * tilesPerPage + tileX;
+				auto newTileIndex = tileY * tilesPerRow + tileX;
 				
 				auto new_pxn = newTileIndex * tileSizePixels + newTilePos;
 				
-				tiles[pageSizePixels*pageNum + new_pxn] = px;
+				tiles[startPos + new_pxn] = px;
 			}
 			
 			delete[] buffer;			
